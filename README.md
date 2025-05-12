@@ -5,7 +5,6 @@ The Real Notice Board is a comprehensive real estate platform that connects rent
 ## Key Features
 
 - **Verified Listings**: All properties are verified to ensure legitimacy
-- **Direct Communication**: Connect directly with property owners and landlords
 - **Advanced Search**: Find properties based on location, price, amenities, and more
 - **User Accounts**: Save favorite listings and receive notifications
 - **Property Management**: Tools for landlords to manage their listings
@@ -21,8 +20,9 @@ To start using The Real Notice Board, follow these steps:
 
 1. Create an account as either a property seeker or property owner
 2. Complete your profile with relevant information
-3. Start browsing listings or create your first property listing
-4. Use the messaging system to communicate with interested parties
+3. Get KYC Verified
+4. Start browsing listings or create your first property listing
+5. Use the messaging system to communicate with interested parties
 
 ## For Property Seekers
 
