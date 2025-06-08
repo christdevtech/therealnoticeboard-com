@@ -1,15 +1,23 @@
 // storage-adapter-import-placeholder
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import sharp from 'sharp' // sharp-import
 import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 
 import { Categories } from './collections/Categories'
+import { EmailLogs } from './collections/EmailLogs'
+import { FAQs } from './collections/FAQs'
+import { Inquiries } from './collections/Inquiries'
+import { KnowledgeBase } from './collections/KnowledgeBase'
 import { Media } from './collections/Media'
+import { Neighborhoods } from './collections/Neighborhoods'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
+import { Properties } from './collections/Properties'
+import { PropertyTypes } from './collections/PropertyTypes'
 import { Users } from './collections/Users'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
@@ -62,7 +70,20 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
   }),
-  collections: [Pages, Posts, Media, Categories, Users],
+  collections: [
+    Pages,
+    Posts,
+    Media,
+    Categories,
+    Users,
+    Properties,
+    PropertyTypes,
+    Neighborhoods,
+    Inquiries,
+    FAQs,
+    KnowledgeBase,
+    EmailLogs,
+  ],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins: [
@@ -74,6 +95,19 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
+  email: nodemailerAdapter({
+    defaultFromAddress: `${process.env.SMTP_FROM}`,
+    defaultFromName: `${process.env.SMTP_FROM_NAME}`,
+    // Nodemailer transportOptions
+    transportOptions: {
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD,
+      },
+    },
+  }),
   jobs: {
     access: {
       run: ({ req }: { req: PayloadRequest }): boolean => {

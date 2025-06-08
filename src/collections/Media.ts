@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url'
 
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
+import { mediaRead, mediaDelete, mediaUpdate } from '../access/media'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -18,9 +19,9 @@ export const Media: CollectionConfig = {
   slug: 'media',
   access: {
     create: authenticated,
-    delete: authenticated,
-    read: anyone,
-    update: authenticated,
+    delete: mediaDelete,
+    read: mediaRead,
+    update: mediaUpdate,
   },
   fields: [
     {
@@ -36,6 +37,35 @@ export const Media: CollectionConfig = {
           return [...rootFeatures, FixedToolbarFeature(), InlineToolbarFeature()]
         },
       }),
+    },
+    {
+      name: 'uploadedBy',
+      type: 'relationship',
+      relationTo: 'users',
+      admin: {
+        position: 'sidebar',
+        description: 'User who uploaded this media',
+      },
+      hooks: {
+        beforeChange: [
+          ({ req, operation, value }) => {
+            // Auto-assign current user as uploader on create
+            if (operation === 'create' && req.user) {
+              return req.user.id
+            }
+            return value
+          },
+        ],
+      },
+    },
+    {
+      name: 'isPublic',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+        description: 'Make this media publicly accessible',
+      },
     },
   ],
   upload: {

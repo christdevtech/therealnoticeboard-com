@@ -54,6 +54,7 @@ export type SupportedTimezones =
   | 'Asia/Singapore'
   | 'Asia/Tokyo'
   | 'Asia/Seoul'
+  | 'Australia/Brisbane'
   | 'Australia/Sydney'
   | 'Pacific/Guam'
   | 'Pacific/Noumea'
@@ -71,6 +72,13 @@ export interface Config {
     media: Media;
     categories: Category;
     users: User;
+    properties: Property;
+    'property-types': PropertyType;
+    neighborhoods: Neighborhood;
+    inquiries: Inquiry;
+    faqs: Faq;
+    'knowledge-base': KnowledgeBase;
+    'email-logs': EmailLog;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -87,6 +95,13 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    properties: PropertiesSelect<false> | PropertiesSelect<true>;
+    'property-types': PropertyTypesSelect<false> | PropertyTypesSelect<true>;
+    neighborhoods: NeighborhoodsSelect<false> | NeighborhoodsSelect<true>;
+    inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
+    faqs: FaqsSelect<false> | FaqsSelect<true>;
+    'knowledge-base': KnowledgeBaseSelect<false> | KnowledgeBaseSelect<true>;
+    'email-logs': EmailLogsSelect<false> | EmailLogsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -275,6 +290,14 @@ export interface Media {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * User who uploaded this media
+   */
+  uploadedBy?: (string | null) | User;
+  /**
+   * Make this media publicly accessible
+   */
+  isPublic?: boolean | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -347,6 +370,42 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: string;
+  name: string;
+  role: 'user' | 'admin';
+  verificationStatus: 'unverified' | 'pending' | 'verified' | 'rejected';
+  phone?: string | null;
+  address?: string | null;
+  /**
+   * Upload a clear photo of your ID card, passport, or driver's license
+   */
+  identificationDocument?: (string | null) | Media;
+  /**
+   * Upload a selfie holding your identification document
+   */
+  selfieWithId?: (string | null) | Media;
+  /**
+   * Admin notes about verification status
+   */
+  verificationNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  _verified?: boolean | null;
+  _verificationToken?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "categories".
  */
 export interface Category {
@@ -365,24 +424,6 @@ export interface Category {
     | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: string;
-  name?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  password?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -624,6 +665,7 @@ export interface Form {
             label?: string | null;
             width?: number | null;
             defaultValue?: string | null;
+            placeholder?: string | null;
             options?:
               | {
                   label: string;
@@ -721,6 +763,410 @@ export interface Form {
         } | null;
         id?: string | null;
       }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "properties".
+ */
+export interface Property {
+  id: string;
+  /**
+   * Property title or name
+   */
+  title: string;
+  /**
+   * Detailed description of the property
+   */
+  description: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * Type of property (land, residential, commercial, industrial)
+   */
+  propertyType: string | PropertyType;
+  listingType: 'sale' | 'rent';
+  /**
+   * Price in XAF (Central African Franc)
+   */
+  price: number;
+  currency?: ('XAF' | 'USD' | 'EUR') | null;
+  neighborhood: string | Neighborhood;
+  /**
+   * Full address of the property
+   */
+  address: string;
+  coordinates?: {
+    /**
+     * Latitude coordinate for map display
+     */
+    latitude?: number | null;
+    /**
+     * Longitude coordinate for map display
+     */
+    longitude?: number | null;
+  };
+  features?: {
+    /**
+     * Number of bedrooms (for residential properties)
+     */
+    bedrooms?: number | null;
+    /**
+     * Number of bathrooms (for residential properties)
+     */
+    bathrooms?: number | null;
+    /**
+     * Area in square meters
+     */
+    area?: number | null;
+    parking?: boolean | null;
+    furnished?: boolean | null;
+    amenities?:
+      | {
+          amenity?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  images: {
+    image: string | Media;
+    caption?: string | null;
+    id?: string | null;
+  }[];
+  owner: string | User;
+  contactInfo: {
+    phone: string;
+    email?: string | null;
+    /**
+     * WhatsApp number for contact
+     */
+    whatsapp?: string | null;
+  };
+  /**
+   * Admin approval status
+   */
+  status: 'pending' | 'approved' | 'rejected' | 'sold';
+  /**
+   * Admin notes about this property
+   */
+  adminNotes?: string | null;
+  /**
+   * Mark as featured property for homepage display
+   */
+  featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "property-types".
+ */
+export interface PropertyType {
+  id: string;
+  name: string;
+  /**
+   * Brief description of this property type
+   */
+  description?: string | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "neighborhoods".
+ */
+export interface Neighborhood {
+  id: string;
+  name: string;
+  /**
+   * City or town name
+   */
+  city: string;
+  region:
+    | 'adamawa'
+    | 'centre'
+    | 'east'
+    | 'far-north'
+    | 'littoral'
+    | 'north'
+    | 'northwest'
+    | 'south'
+    | 'southwest'
+    | 'west';
+  /**
+   * Brief description of the neighborhood
+   */
+  description?: string | null;
+  coordinates?: {
+    /**
+     * Latitude coordinate
+     */
+    latitude?: number | null;
+    /**
+     * Longitude coordinate
+     */
+    longitude?: number | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inquiries".
+ */
+export interface Inquiry {
+  id: string;
+  /**
+   * Property this inquiry is about
+   */
+  property: string | Property;
+  /**
+   * User making the inquiry
+   */
+  inquirer: string | User;
+  /**
+   * Subject of the inquiry
+   */
+  subject: string;
+  /**
+   * Inquiry message
+   */
+  message: string;
+  inquiryType: 'general' | 'viewing' | 'offer' | 'details';
+  contactPreference: 'email' | 'phone' | 'whatsapp';
+  contactInfo?: {
+    phone?: string | null;
+    email?: string | null;
+    /**
+     * Preferred time for contact
+     */
+    preferredTime?: string | null;
+  };
+  /**
+   * Offer amount (if making an offer)
+   */
+  offerAmount?: number | null;
+  status: 'new' | 'in-progress' | 'responded' | 'closed';
+  /**
+   * Response from property owner
+   */
+  response?: string | null;
+  /**
+   * Date of response
+   */
+  responseDate?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faqs".
+ */
+export interface Faq {
+  id: string;
+  /**
+   * The frequently asked question
+   */
+  question: string;
+  /**
+   * Detailed answer to the question
+   */
+  answer: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  category:
+    | 'property-listings'
+    | 'user-verification'
+    | 'buying-process'
+    | 'renting-process'
+    | 'property-types'
+    | 'payments-fees'
+    | 'legal-documentation'
+    | 'platform-usage'
+    | 'contact-support'
+    | 'general';
+  /**
+   * Tags for better searchability and AI context
+   */
+  tags?:
+    | {
+        tag?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Priority for AI chat responses
+   */
+  priority?: ('high' | 'medium' | 'low') | null;
+  /**
+   * Whether this FAQ is published and available for AI chat
+   */
+  published?: boolean | null;
+  /**
+   * Related questions that might be asked
+   */
+  relatedQuestions?:
+    | {
+        question?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Additional context for AI to understand when to use this FAQ
+   */
+  aiContext?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "knowledge-base".
+ */
+export interface KnowledgeBase {
+  id: string;
+  /**
+   * Title of the knowledge base article
+   */
+  title: string;
+  /**
+   * Main content of the knowledge base article
+   */
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * Brief summary for AI context and search results
+   */
+  summary: string;
+  category:
+    | 'property-management'
+    | 'user-guide'
+    | 'legal-information'
+    | 'market-insights'
+    | 'investment-tips'
+    | 'property-types'
+    | 'location-guides'
+    | 'financing'
+    | 'technical-support'
+    | 'general';
+  /**
+   * Tags for better searchability and AI context matching
+   */
+  tags?:
+    | {
+        tag?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Keywords that trigger this article in AI responses
+   */
+  keywords?:
+    | {
+        keyword?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Priority for AI chat responses and search results
+   */
+  priority?: ('high' | 'medium' | 'low') | null;
+  /**
+   * Whether this article is published and available for AI chat
+   */
+  published?: boolean | null;
+  /**
+   * Related knowledge base articles
+   */
+  relatedArticles?: (string | KnowledgeBase)[] | null;
+  /**
+   * Related FAQ entries
+   */
+  relatedFAQs?: (string | Faq)[] | null;
+  /**
+   * Additional context for AI to understand when and how to use this article
+   */
+  aiContext?: string | null;
+  /**
+   * Last update date for content freshness tracking
+   */
+  lastUpdated?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "email-logs".
+ */
+export interface EmailLog {
+  id: string;
+  to: string;
+  subject: string;
+  type: 'verification' | 'password-reset' | 'newsletter' | 'notification' | 'other';
+  status: 'pending' | 'sent' | 'failed' | 'bounced';
+  sentAt?: string | null;
+  /**
+   * The user this email was sent to (if applicable)
+   */
+  userId?: (string | null) | User;
+  /**
+   * The HTML content of the email
+   */
+  htmlContent?: string | null;
+  /**
+   * Error message if email failed to send
+   */
+  errorMessage?: string | null;
+  /**
+   * Additional metadata about the email
+   */
+  metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
     | null;
   updatedAt: string;
   createdAt: string;
@@ -916,6 +1362,34 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: string | User;
+      } | null)
+    | ({
+        relationTo: 'properties';
+        value: string | Property;
+      } | null)
+    | ({
+        relationTo: 'property-types';
+        value: string | PropertyType;
+      } | null)
+    | ({
+        relationTo: 'neighborhoods';
+        value: string | Neighborhood;
+      } | null)
+    | ({
+        relationTo: 'inquiries';
+        value: string | Inquiry;
+      } | null)
+    | ({
+        relationTo: 'faqs';
+        value: string | Faq;
+      } | null)
+    | ({
+        relationTo: 'knowledge-base';
+        value: string | KnowledgeBase;
+      } | null)
+    | ({
+        relationTo: 'email-logs';
+        value: string | EmailLog;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1152,6 +1626,8 @@ export interface PostsSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
+  uploadedBy?: T;
+  isPublic?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -1264,6 +1740,13 @@ export interface CategoriesSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  role?: T;
+  verificationStatus?: T;
+  phone?: T;
+  address?: T;
+  identificationDocument?: T;
+  selfieWithId?: T;
+  verificationNotes?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -1271,8 +1754,192 @@ export interface UsersSelect<T extends boolean = true> {
   resetPasswordExpiration?: T;
   salt?: T;
   hash?: T;
+  _verified?: T;
+  _verificationToken?: T;
   loginAttempts?: T;
   lockUntil?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "properties_select".
+ */
+export interface PropertiesSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  propertyType?: T;
+  listingType?: T;
+  price?: T;
+  currency?: T;
+  neighborhood?: T;
+  address?: T;
+  coordinates?:
+    | T
+    | {
+        latitude?: T;
+        longitude?: T;
+      };
+  features?:
+    | T
+    | {
+        bedrooms?: T;
+        bathrooms?: T;
+        area?: T;
+        parking?: T;
+        furnished?: T;
+        amenities?:
+          | T
+          | {
+              amenity?: T;
+              id?: T;
+            };
+      };
+  images?:
+    | T
+    | {
+        image?: T;
+        caption?: T;
+        id?: T;
+      };
+  owner?: T;
+  contactInfo?:
+    | T
+    | {
+        phone?: T;
+        email?: T;
+        whatsapp?: T;
+      };
+  status?: T;
+  adminNotes?: T;
+  featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "property-types_select".
+ */
+export interface PropertyTypesSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "neighborhoods_select".
+ */
+export interface NeighborhoodsSelect<T extends boolean = true> {
+  name?: T;
+  city?: T;
+  region?: T;
+  description?: T;
+  coordinates?:
+    | T
+    | {
+        latitude?: T;
+        longitude?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inquiries_select".
+ */
+export interface InquiriesSelect<T extends boolean = true> {
+  property?: T;
+  inquirer?: T;
+  subject?: T;
+  message?: T;
+  inquiryType?: T;
+  contactPreference?: T;
+  contactInfo?:
+    | T
+    | {
+        phone?: T;
+        email?: T;
+        preferredTime?: T;
+      };
+  offerAmount?: T;
+  status?: T;
+  response?: T;
+  responseDate?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faqs_select".
+ */
+export interface FaqsSelect<T extends boolean = true> {
+  question?: T;
+  answer?: T;
+  category?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  priority?: T;
+  published?: T;
+  relatedQuestions?:
+    | T
+    | {
+        question?: T;
+        id?: T;
+      };
+  aiContext?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "knowledge-base_select".
+ */
+export interface KnowledgeBaseSelect<T extends boolean = true> {
+  title?: T;
+  content?: T;
+  summary?: T;
+  category?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  keywords?:
+    | T
+    | {
+        keyword?: T;
+        id?: T;
+      };
+  priority?: T;
+  published?: T;
+  relatedArticles?: T;
+  relatedFAQs?: T;
+  aiContext?: T;
+  lastUpdated?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "email-logs_select".
+ */
+export interface EmailLogsSelect<T extends boolean = true> {
+  to?: T;
+  subject?: T;
+  type?: T;
+  status?: T;
+  sentAt?: T;
+  userId?: T;
+  htmlContent?: T;
+  errorMessage?: T;
+  metadata?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1355,6 +2022,7 @@ export interface FormsSelect<T extends boolean = true> {
               label?: T;
               width?: T;
               defaultValue?: T;
+              placeholder?: T;
               options?:
                 | T
                 | {
