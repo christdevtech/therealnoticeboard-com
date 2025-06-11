@@ -74,28 +74,32 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({ user }) => {
 
       {/* Verification Status Alert */}
       {needsVerification && (
-        <div className={`rounded-lg border p-6 mb-8 ${
-          isVerificationPending 
-            ? 'bg-yellow-50 border-yellow-200' 
-            : isVerificationRejected 
-            ? 'bg-red-50 border-red-200'
-            : 'bg-blue-50 border-blue-200'
-        }`}>
+        <div
+          className={`rounded-lg border p-6 mb-8 ${
+            isVerificationPending
+              ? 'bg-yellow-50 border-yellow-200'
+              : isVerificationRejected
+                ? 'bg-red-50 border-red-200'
+                : 'bg-blue-50 border-blue-200'
+          }`}
+        >
           <div className="flex items-start">
-            <div className={`p-2 rounded-lg mr-4 ${
-              isVerificationPending 
-                ? 'bg-yellow-100' 
-                : isVerificationRejected 
-                ? 'bg-red-100'
-                : 'bg-blue-100'
-            }`}>
+            <div
+              className={`p-2 rounded-lg mr-4 ${
+                isVerificationPending
+                  ? 'bg-yellow-100'
+                  : isVerificationRejected
+                    ? 'bg-red-100'
+                    : 'bg-blue-100'
+              }`}
+            >
               <svg
                 className={`w-6 h-6 ${
-                  isVerificationPending 
-                    ? 'text-yellow-600' 
-                    : isVerificationRejected 
-                    ? 'text-red-600'
-                    : 'text-blue-600'
+                  isVerificationPending
+                    ? 'text-yellow-600'
+                    : isVerificationRejected
+                      ? 'text-red-600'
+                      : 'text-blue-600'
                 }`}
                 fill="none"
                 stroke="currentColor"
@@ -126,40 +130,42 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({ user }) => {
               </svg>
             </div>
             <div className="flex-1">
-              <h3 className={`font-semibold mb-2 ${
-                isVerificationPending 
-                  ? 'text-yellow-800' 
-                  : isVerificationRejected 
-                  ? 'text-red-800'
-                  : 'text-blue-800'
-              }`}>
-                {isVerificationPending 
-                  ? 'Verification Pending' 
-                  : isVerificationRejected 
-                  ? 'Verification Rejected'
-                  : 'Identity Verification Required'
-                }
+              <h3
+                className={`font-semibold mb-2 ${
+                  isVerificationPending
+                    ? 'text-yellow-800'
+                    : isVerificationRejected
+                      ? 'text-red-800'
+                      : 'text-blue-800'
+                }`}
+              >
+                {isVerificationPending
+                  ? 'Verification Pending'
+                  : isVerificationRejected
+                    ? 'Verification Rejected'
+                    : 'Identity Verification Required'}
               </h3>
-              <p className={`mb-4 ${
-                isVerificationPending 
-                  ? 'text-yellow-700' 
-                  : isVerificationRejected 
-                  ? 'text-red-700'
-                  : 'text-blue-700'
-              }`}>
-                {isVerificationPending 
-                  ? 'Your verification documents are being reviewed. You will receive an email once the review is complete.' 
-                  : isVerificationRejected 
-                  ? 'Your verification was rejected. Please review the feedback and submit new documents.'
-                  : 'Complete your identity verification to start listing properties on The Real Notice Board.'
-                }
+              <p
+                className={`mb-4 ${
+                  isVerificationPending
+                    ? 'text-yellow-700'
+                    : isVerificationRejected
+                      ? 'text-red-700'
+                      : 'text-blue-700'
+                }`}
+              >
+                {isVerificationPending
+                  ? 'Your verification documents are being reviewed. You will receive an email once the review is complete.'
+                  : isVerificationRejected
+                    ? 'Your verification was rejected. Please review the feedback and submit new documents.'
+                    : 'Complete your identity verification to start listing properties on The Real Notice Board.'}
               </p>
               {!isVerificationPending && (
                 <Link
                   href="/dashboard/verification"
                   className={`inline-flex items-center px-4 py-2 rounded-md text-white transition-colors ${
-                    isVerificationRejected 
-                      ? 'bg-red-600 hover:bg-red-700' 
+                    isVerificationRejected
+                      ? 'bg-red-600 hover:bg-red-700'
                       : 'bg-blue-600 hover:bg-blue-700'
                   }`}
                 >
@@ -169,17 +175,17 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({ user }) => {
             </div>
           </div>
         </div>
-        )}
+      )}
 
-        {/* Admin Verification Panel */}
-        {user.role === 'admin' && (
-          <div className="mb-8">
-            <AdminVerificationPanel user={user} />
-          </div>
-        )}
+      {/* Admin Verification Panel */}
+      {user.role === 'admin' && (
+        <div className="mb-8">
+          <AdminVerificationPanel user={user} />
+        </div>
+      )}
 
-        {/* Stats Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      {/* Stats Section */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div className="flex items-center">
             <div className="p-2 bg-blue-100 rounded-lg">
@@ -259,7 +265,7 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({ user }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {user.verificationStatus === 'verified' ? (
             <Link
-              href="/properties/new"
+              href="/dashboard/properties/new"
               className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <div className="p-2 bg-blue-100 rounded-lg mr-3">

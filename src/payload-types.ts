@@ -807,30 +807,16 @@ export interface Property {
   /**
    * Detailed description of the property
    */
-  description: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
+  description: string;
   /**
    * Type of property (land, residential, commercial, industrial)
    */
   propertyType: 'land' | 'residential' | 'commercial' | 'industrial';
-  listingType: 'sale' | 'rent';
+  images?: (string | Media)[] | null;
   /**
-   * Price in XAF (Central African Franc)
+   * Area in square meters
    */
-  price: number;
+  area: number;
   neighborhood: string | Neighborhood;
   /**
    * Full address of the property
@@ -846,10 +832,6 @@ export interface Property {
      */
     longitude?: number | null;
   };
-  /**
-   * Area in square meters
-   */
-  area: number;
   residentialFeatures?: {
     /**
      * Number of bedrooms
@@ -922,12 +904,6 @@ export interface Property {
    * Select amenities available for this property
    */
   amenities?: (string | Amenity)[] | null;
-  images: {
-    image: string | Media;
-    caption?: string | null;
-    id?: string | null;
-  }[];
-  owner: string | User;
   contactInfo: {
     phone: string;
     email?: string | null;
@@ -936,6 +912,12 @@ export interface Property {
      */
     whatsapp?: string | null;
   };
+  owner: string | User;
+  /**
+   * Price in XAF (Central African Franc)
+   */
+  price: number;
+  listingType: 'sale' | 'rent';
   /**
    * Admin approval status
    */
@@ -1879,8 +1861,8 @@ export interface PropertiesSelect<T extends boolean = true> {
   title?: T;
   description?: T;
   propertyType?: T;
-  listingType?: T;
-  price?: T;
+  images?: T;
+  area?: T;
   neighborhood?: T;
   address?: T;
   coordinates?:
@@ -1889,7 +1871,6 @@ export interface PropertiesSelect<T extends boolean = true> {
         latitude?: T;
         longitude?: T;
       };
-  area?: T;
   residentialFeatures?:
     | T
     | {
@@ -1922,14 +1903,6 @@ export interface PropertiesSelect<T extends boolean = true> {
         topography?: T;
       };
   amenities?: T;
-  images?:
-    | T
-    | {
-        image?: T;
-        caption?: T;
-        id?: T;
-      };
-  owner?: T;
   contactInfo?:
     | T
     | {
@@ -1937,6 +1910,9 @@ export interface PropertiesSelect<T extends boolean = true> {
         email?: T;
         whatsapp?: T;
       };
+  owner?: T;
+  price?: T;
+  listingType?: T;
   status?: T;
   adminNotes?: T;
   featured?: T;
