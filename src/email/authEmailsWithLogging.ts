@@ -1,7 +1,9 @@
-import type { PayloadRequest } from 'payload'
+import { getPayload, type PayloadRequest } from 'payload'
 import { generateEmailHTML, generateEmailSubject } from './generateEmailHTML'
+import config from '@payload-config'
+import { User } from '@/payload-types'
 
-type VerificationEmailArgs = 
+type VerificationEmailArgs =
   | {
       req?: PayloadRequest
       token?: string
@@ -9,7 +11,7 @@ type VerificationEmailArgs =
     }
   | undefined
 
-type ForgotPasswordEmailArgs = 
+type ForgotPasswordEmailArgs =
   | {
       req?: PayloadRequest
       token?: string
@@ -17,7 +19,7 @@ type ForgotPasswordEmailArgs =
     }
   | undefined
 
-type EmailSubjectArgs = 
+type EmailSubjectArgs =
   | {
       req?: PayloadRequest
       token?: string
@@ -32,33 +34,34 @@ const logEmailToDatabase = async (emailData: {
   type: 'verification' | 'password-reset'
   status: 'sent' | 'failed'
   htmlContent: string
-  userId?: string | number
+  userId?: string | User | null | undefined
   errorMessage?: string
+  req?: PayloadRequest
 }) => {
   try {
     // This would save to your EmailLogs collection
     // You'll need to import payload and use it to create the record
-    console.log('Email logged to database:', emailData)
-    
+    // console.log('Email logged to database:', emailData)
+
     // Example implementation:
-    // const payload = await getPayload({ config })
-    // await payload.create({
-    //   collection: 'email-logs',
-    //   data: {
-    //     recipient: emailData.recipient,
-    //     subject: emailData.subject,
-    //     type: emailData.type,
-    //     status: emailData.status,
-    //     sentAt: new Date(),
-    //     relatedUser: emailData.userId,
-    //     htmlContent: emailData.htmlContent,
-    //     errorMessage: emailData.errorMessage,
-    //     metadata: {
-    //       userAgent: req?.headers?.['user-agent'],
-    //       ip: req?.ip
-    //     }
-    //   }
-    // })
+    const payload = await getPayload({ config })
+    await payload.create({
+      collection: 'email-logs',
+      data: {
+        to: emailData.recipient,
+        subject: emailData.subject,
+        type: emailData.type,
+        status: emailData.status,
+        sentAt: new Date().toISOString(),
+        userId: emailData.userId,
+        htmlContent: emailData.htmlContent,
+        errorMessage: emailData.errorMessage,
+        metadata: {
+          userAgent: emailData.req?.headers?.get('user-agent'),
+          ip: emailData.req?.headers.get('ip'),
+        },
+      },
+    })
   } catch (error) {
     console.error('Failed to log email to database:', error)
   }
@@ -70,14 +73,14 @@ export const generateVerificationEmailHTML = async (
 ): Promise<string> => {
   const url = `${process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000'}/verify-email?token=${args?.token}`
   const user = args?.user || { email: '', name: '' }
-  
+
   try {
     const htmlContent = generateEmailHTML({
       user,
       url,
-      type: 'verification'
+      type: 'verification',
     })
-    
+
     // Log successful email generation
     await logEmailToDatabase({
       recipient: user.email,
@@ -85,32 +88,33 @@ export const generateVerificationEmailHTML = async (
       type: 'verification',
       status: 'sent',
       htmlContent,
-      userId: user.id
+      userId: user.id,
+      req: args?.req,
     })
-    
-    console.log(`Verification email generated and logged for ${user.email} at ${new Date().toISOString()}`)
-    
+
+    console.log(
+      `Verification email generated and logged for ${user.email} at ${new Date().toISOString()}`,
+    )
+
     return htmlContent
   } catch (error) {
     // Log failed email generation
-    await logEmailToDatabase({
-      recipient: user.email,
-      subject: 'Verify Your Email Address',
-      type: 'verification',
-      status: 'failed',
-      htmlContent: '',
-      userId: user.id,
-      errorMessage: error instanceof Error ? error.message : 'Unknown error'
-    })
-    
+    // await logEmailToDatabase({
+    //   recipient: user.email,
+    //   subject: 'Verify Your Email Address',
+    //   type: 'verification',
+    //   status: 'failed',
+    //   htmlContent: '',
+    //   userId: user.id,
+    //   errorMessage: error instanceof Error ? error.message : 'Unknown error',
+    // })
+
     console.error(`Failed to generate verification email for ${user.email}:`, error)
     throw error
   }
 }
 
-export const generateVerificationEmailSubject = async (
-  args: EmailSubjectArgs,
-): Promise<string> => {
+export const generateVerificationEmailSubject = async (args: EmailSubjectArgs): Promise<string> => {
   return generateEmailSubject('verification')
 }
 
@@ -120,14 +124,14 @@ export const generatePasswordResetEmailHTML = async (
 ): Promise<string> => {
   const resetPasswordURL = `${process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000'}/reset-password?token=${args?.token}`
   const user = args?.user || { email: '', name: '' }
-  
+
   try {
     const htmlContent = generateEmailHTML({
       user,
       url: resetPasswordURL,
-      type: 'password-reset'
+      type: 'password-reset',
     })
-    
+
     // Log successful email generation
     await logEmailToDatabase({
       recipient: user.email,
@@ -135,11 +139,13 @@ export const generatePasswordResetEmailHTML = async (
       type: 'password-reset',
       status: 'sent',
       htmlContent,
-      userId: user.id
+      userId: user.id,
     })
-    
-    console.log(`Password reset email generated and logged for ${user.email} at ${new Date().toISOString()}`)
-    
+
+    console.log(
+      `Password reset email generated and logged for ${user.email} at ${new Date().toISOString()}`,
+    )
+
     return htmlContent
   } catch (error) {
     // Log failed email generation
@@ -150,9 +156,9 @@ export const generatePasswordResetEmailHTML = async (
       status: 'failed',
       htmlContent: '',
       userId: user.id,
-      errorMessage: error instanceof Error ? error.message : 'Unknown error'
+      errorMessage: error instanceof Error ? error.message : 'Unknown error',
     })
-    
+
     console.error(`Failed to generate password reset email for ${user.email}:`, error)
     throw error
   }

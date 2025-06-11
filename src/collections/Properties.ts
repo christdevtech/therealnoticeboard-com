@@ -36,8 +36,25 @@ export const Properties: CollectionConfig = {
     },
     {
       name: 'propertyType',
-      type: 'relationship',
-      relationTo: 'property-types',
+      type: 'select',
+      options: [
+        {
+          label: 'Land',
+          value: 'land',
+        },
+        {
+          label: 'Residential',
+          value: 'residential',
+        },
+        {
+          label: 'Commercial',
+          value: 'commercial',
+        },
+        {
+          label: 'Industrial',
+          value: 'industrial',
+        },
+      ],
       required: true,
       admin: {
         description: 'Type of property (land, residential, commercial, industrial)',
@@ -65,25 +82,6 @@ export const Properties: CollectionConfig = {
       admin: {
         description: 'Price in XAF (Central African Franc)',
       },
-    },
-    {
-      name: 'currency',
-      type: 'select',
-      defaultValue: 'XAF',
-      options: [
-        {
-          label: 'XAF (Central African Franc)',
-          value: 'XAF',
-        },
-        {
-          label: 'USD (US Dollar)',
-          value: 'USD',
-        },
-        {
-          label: 'EUR (Euro)',
-          value: 'EUR',
-        },
-      ],
     },
     {
       name: 'neighborhood',
@@ -119,52 +117,208 @@ export const Properties: CollectionConfig = {
         },
       ],
     },
+    // Common property features
     {
-      name: 'features',
+      name: 'area',
+      type: 'number',
+      required: true,
+      admin: {
+        description: 'Area in square meters',
+      },
+    },
+    // Residential-specific features
+    {
+      name: 'residentialFeatures',
       type: 'group',
+      admin: {
+        condition: (data) => data.propertyType === 'residential',
+      },
       fields: [
         {
           name: 'bedrooms',
           type: 'number',
+          required: true,
           admin: {
-            description: 'Number of bedrooms (for residential properties)',
+            description: 'Number of bedrooms',
           },
         },
         {
           name: 'bathrooms',
           type: 'number',
+          required: true,
           admin: {
-            description: 'Number of bathrooms (for residential properties)',
+            description: 'Number of bathrooms',
           },
         },
         {
-          name: 'area',
+          name: 'floors',
           type: 'number',
           admin: {
-            description: 'Area in square meters',
+            description: 'Number of floors',
           },
         },
         {
-          name: 'parking',
-          type: 'checkbox',
-          label: 'Parking Available',
-        },
-        {
-          name: 'furnished',
-          type: 'checkbox',
-          label: 'Furnished',
-        },
-        {
-          name: 'amenities',
-          type: 'array',
-          fields: [
-            {
-              name: 'amenity',
-              type: 'text',
-            },
-          ],
+          name: 'yearBuilt',
+          type: 'number',
+          admin: {
+            description: 'Year the property was built',
+          },
         },
       ],
+    },
+    // Commercial-specific features
+    {
+      name: 'commercialFeatures',
+      type: 'group',
+      admin: {
+        condition: (data) => data.propertyType === 'commercial',
+      },
+      fields: [
+        {
+          name: 'businessType',
+          type: 'select',
+          options: [
+            { label: 'Office', value: 'office' },
+            { label: 'Retail', value: 'retail' },
+            { label: 'Restaurant', value: 'restaurant' },
+            { label: 'Warehouse', value: 'warehouse' },
+            { label: 'Mixed Use', value: 'mixed' },
+            { label: 'Other', value: 'other' },
+          ],
+          admin: {
+            description: 'Type of commercial use',
+          },
+        },
+        {
+          name: 'floors',
+          type: 'number',
+          admin: {
+            description: 'Number of floors',
+          },
+        },
+        {
+          name: 'offices',
+          type: 'number',
+          admin: {
+            description: 'Number of offices/rooms',
+          },
+        },
+        {
+          name: 'yearBuilt',
+          type: 'number',
+          admin: {
+            description: 'Year the property was built',
+          },
+        },
+      ],
+    },
+    // Industrial-specific features
+    {
+      name: 'industrialFeatures',
+      type: 'group',
+      admin: {
+        condition: (data) => data.propertyType === 'industrial',
+      },
+      fields: [
+        {
+          name: 'industrialType',
+          type: 'select',
+          options: [
+            { label: 'Manufacturing', value: 'manufacturing' },
+            { label: 'Warehouse', value: 'warehouse' },
+            { label: 'Distribution Center', value: 'distribution' },
+            { label: 'Factory', value: 'factory' },
+            { label: 'Storage', value: 'storage' },
+            { label: 'Other', value: 'other' },
+          ],
+          admin: {
+            description: 'Type of industrial use',
+          },
+        },
+        {
+          name: 'ceilingHeight',
+          type: 'number',
+          admin: {
+            description: 'Ceiling height in meters',
+          },
+        },
+        {
+          name: 'loadingDocks',
+          type: 'number',
+          admin: {
+            description: 'Number of loading docks',
+          },
+        },
+        {
+          name: 'powerSupply',
+          type: 'text',
+          admin: {
+            description: 'Power supply specifications',
+          },
+        },
+        {
+          name: 'yearBuilt',
+          type: 'number',
+          admin: {
+            description: 'Year the property was built',
+          },
+        },
+      ],
+    },
+    // Land-specific features
+    {
+      name: 'landFeatures',
+      type: 'group',
+      admin: {
+        condition: (data) => data.propertyType === 'land',
+      },
+      fields: [
+        {
+          name: 'landType',
+          type: 'select',
+          options: [
+            { label: 'Residential Plot', value: 'residential' },
+            { label: 'Commercial Plot', value: 'commercial' },
+            { label: 'Agricultural', value: 'agricultural' },
+            { label: 'Industrial', value: 'industrial' },
+            { label: 'Mixed Use', value: 'mixed' },
+            { label: 'Undeveloped', value: 'undeveloped' },
+          ],
+          admin: {
+            description: 'Intended use of the land',
+          },
+        },
+        {
+          name: 'topography',
+          type: 'select',
+          options: [
+            { label: 'Flat', value: 'flat' },
+            { label: 'Sloped', value: 'sloped' },
+            { label: 'Hilly', value: 'hilly' },
+            { label: 'Irregular', value: 'irregular' },
+          ],
+          admin: {
+            description: 'Land topography',
+          },
+        },
+      ],
+    },
+    // Property amenities (filtered by property type)
+    {
+      name: 'amenities',
+      type: 'relationship',
+      relationTo: 'amenities',
+      hasMany: true,
+      admin: {
+        description: 'Select amenities available for this property',
+      },
+      filterOptions: ({ siblingData }) => {
+        return {
+          propertyTypes: {
+            contains: siblingData.propertyType,
+          },
+        }
+      },
     },
     {
       name: 'images',

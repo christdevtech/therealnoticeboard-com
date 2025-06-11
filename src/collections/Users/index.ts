@@ -89,33 +89,6 @@ export const Users: CollectionConfig = {
       type: 'textarea',
       label: 'Address',
     },
-    {
-      name: 'identificationDocument',
-      type: 'upload',
-      relationTo: 'media',
-      label: 'Identification Document',
-      admin: {
-        description: "Upload a clear photo of your ID card, passport, or driver's license",
-      },
-    },
-    {
-      name: 'selfieWithId',
-      type: 'upload',
-      relationTo: 'media',
-      label: 'Selfie with ID',
-      admin: {
-        description: 'Upload a selfie holding your identification document',
-      },
-    },
-    {
-      name: 'verificationNotes',
-      type: 'textarea',
-      label: 'Verification Notes',
-      admin: {
-        description: 'Admin notes about verification status',
-        condition: (data, siblingData, { user }) => user?.role === 'admin',
-      },
-    },
   ],
   timestamps: true,
 }

@@ -17,13 +17,14 @@ import { Neighborhoods } from './collections/Neighborhoods'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
 import { Properties } from './collections/Properties'
-import { PropertyTypes } from './collections/PropertyTypes'
 import { Users } from './collections/Users'
+import { VerificationRequests } from './collections/VerificationRequests'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
+import { Amenities } from './collections/Amenities'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -71,18 +72,19 @@ export default buildConfig({
     url: process.env.DATABASE_URI || '',
   }),
   collections: [
+    Amenities,
     Pages,
     Posts,
     Media,
     Categories,
     Users,
     Properties,
-    PropertyTypes,
     Neighborhoods,
     Inquiries,
     FAQs,
     KnowledgeBase,
     EmailLogs,
+    VerificationRequests,
   ],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],

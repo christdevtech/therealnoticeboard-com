@@ -1,27 +1,13 @@
 import type { Access } from 'payload'
 
-export const propertiesRead: Access = ({ req: { user } }) => {
+export const propertiesRead: Access = ({ req: { user, data } }) => {
   // Admins can see all properties
   if (user?.role === 'admin') return true
 
-  // Authenticated users can see their own properties and approved ones
-  if (user) {
-    return {
-      or: [
-        {
-          owner: {
-            equals: user.id,
-          },
-        },
-        {
-          status: {
-            equals: 'approved',
-          },
-        },
-      ],
-    }
+  // Users can only see their own properties
+  if (user?.role === 'user' && data?.owner === user.id) {
+    return true
   }
-
   // Non-authenticated users can only see approved properties
   return {
     status: {

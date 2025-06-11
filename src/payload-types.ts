@@ -67,18 +67,19 @@ export interface Config {
   };
   blocks: {};
   collections: {
+    amenities: Amenity;
     pages: Page;
     posts: Post;
     media: Media;
     categories: Category;
     users: User;
     properties: Property;
-    'property-types': PropertyType;
     neighborhoods: Neighborhood;
     inquiries: Inquiry;
     faqs: Faq;
     'knowledge-base': KnowledgeBase;
     'email-logs': EmailLog;
+    'verification-requests': VerificationRequest;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -90,18 +91,19 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
+    amenities: AmenitiesSelect<false> | AmenitiesSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     properties: PropertiesSelect<false> | PropertiesSelect<true>;
-    'property-types': PropertyTypesSelect<false> | PropertyTypesSelect<true>;
     neighborhoods: NeighborhoodsSelect<false> | NeighborhoodsSelect<true>;
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
     faqs: FaqsSelect<false> | FaqsSelect<true>;
     'knowledge-base': KnowledgeBaseSelect<false> | KnowledgeBaseSelect<true>;
     'email-logs': EmailLogsSelect<false> | EmailLogsSelect<true>;
+    'verification-requests': VerificationRequestsSelect<false> | VerificationRequestsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -154,6 +156,167 @@ export interface UserAuthOperations {
     email: string;
     password: string;
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "amenities".
+ */
+export interface Amenity {
+  id: string;
+  /**
+   * Name of the amenity or feature
+   */
+  name: string;
+  /**
+   * Category of the amenity
+   */
+  category:
+    | 'basic'
+    | 'comfort'
+    | 'security'
+    | 'recreation'
+    | 'business'
+    | 'utilities'
+    | 'transportation'
+    | 'environmental';
+  /**
+   * Property types this amenity applies to
+   */
+  propertyTypes: ('residential' | 'commercial' | 'industrial' | 'land')[];
+  /**
+   * Optional description of the amenity
+   */
+  description?: string | null;
+  /**
+   * Icon representing this amenity
+   */
+  icon: string | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: string;
+  alt?: string | null;
+  caption?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * User who uploaded this media
+   */
+  uploadedBy?: (string | null) | User;
+  /**
+   * Make this media publicly accessible
+   */
+  isPublic?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    square?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    small?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    medium?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    large?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    xlarge?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    og?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: string;
+  name: string;
+  role: 'user' | 'admin';
+  verificationStatus: 'unverified' | 'pending' | 'verified' | 'rejected';
+  phone?: string | null;
+  address?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  _verified?: boolean | null;
+  _verificationToken?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  password?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -267,142 +430,6 @@ export interface Post {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: string;
-  alt?: string | null;
-  caption?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  /**
-   * User who uploaded this media
-   */
-  uploadedBy?: (string | null) | User;
-  /**
-   * Make this media publicly accessible
-   */
-  isPublic?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-  sizes?: {
-    thumbnail?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    square?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    small?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    medium?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    large?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    xlarge?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    og?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-  };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: string;
-  name: string;
-  role: 'user' | 'admin';
-  verificationStatus: 'unverified' | 'pending' | 'verified' | 'rejected';
-  phone?: string | null;
-  address?: string | null;
-  /**
-   * Upload a clear photo of your ID card, passport, or driver's license
-   */
-  identificationDocument?: (string | null) | Media;
-  /**
-   * Upload a selfie holding your identification document
-   */
-  selfieWithId?: (string | null) | Media;
-  /**
-   * Admin notes about verification status
-   */
-  verificationNotes?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  _verified?: boolean | null;
-  _verificationToken?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  password?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -798,13 +825,12 @@ export interface Property {
   /**
    * Type of property (land, residential, commercial, industrial)
    */
-  propertyType: string | PropertyType;
+  propertyType: 'land' | 'residential' | 'commercial' | 'industrial';
   listingType: 'sale' | 'rent';
   /**
    * Price in XAF (Central African Franc)
    */
   price: number;
-  currency?: ('XAF' | 'USD' | 'EUR') | null;
   neighborhood: string | Neighborhood;
   /**
    * Full address of the property
@@ -820,28 +846,82 @@ export interface Property {
      */
     longitude?: number | null;
   };
-  features?: {
+  /**
+   * Area in square meters
+   */
+  area: number;
+  residentialFeatures?: {
     /**
-     * Number of bedrooms (for residential properties)
+     * Number of bedrooms
      */
-    bedrooms?: number | null;
+    bedrooms: number;
     /**
-     * Number of bathrooms (for residential properties)
+     * Number of bathrooms
      */
-    bathrooms?: number | null;
+    bathrooms: number;
     /**
-     * Area in square meters
+     * Number of floors
      */
-    area?: number | null;
-    parking?: boolean | null;
-    furnished?: boolean | null;
-    amenities?:
-      | {
-          amenity?: string | null;
-          id?: string | null;
-        }[]
-      | null;
+    floors?: number | null;
+    /**
+     * Year the property was built
+     */
+    yearBuilt?: number | null;
   };
+  commercialFeatures?: {
+    /**
+     * Type of commercial use
+     */
+    businessType?: ('office' | 'retail' | 'restaurant' | 'warehouse' | 'mixed' | 'other') | null;
+    /**
+     * Number of floors
+     */
+    floors?: number | null;
+    /**
+     * Number of offices/rooms
+     */
+    offices?: number | null;
+    /**
+     * Year the property was built
+     */
+    yearBuilt?: number | null;
+  };
+  industrialFeatures?: {
+    /**
+     * Type of industrial use
+     */
+    industrialType?: ('manufacturing' | 'warehouse' | 'distribution' | 'factory' | 'storage' | 'other') | null;
+    /**
+     * Ceiling height in meters
+     */
+    ceilingHeight?: number | null;
+    /**
+     * Number of loading docks
+     */
+    loadingDocks?: number | null;
+    /**
+     * Power supply specifications
+     */
+    powerSupply?: string | null;
+    /**
+     * Year the property was built
+     */
+    yearBuilt?: number | null;
+  };
+  landFeatures?: {
+    /**
+     * Intended use of the land
+     */
+    landType?: ('residential' | 'commercial' | 'agricultural' | 'industrial' | 'mixed' | 'undeveloped') | null;
+    /**
+     * Land topography
+     */
+    topography?: ('flat' | 'sloped' | 'hilly' | 'irregular') | null;
+  };
+  /**
+   * Select amenities available for this property
+   */
+  amenities?: (string | Amenity)[] | null;
   images: {
     image: string | Media;
     caption?: string | null;
@@ -868,21 +948,6 @@ export interface Property {
    * Mark as featured property for homepage display
    */
   featured?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "property-types".
- */
-export interface PropertyType {
-  id: string;
-  name: string;
-  /**
-   * Brief description of this property type
-   */
-  description?: string | null;
-  slug: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -1141,7 +1206,7 @@ export interface EmailLog {
   id: string;
   to: string;
   subject: string;
-  type: 'verification' | 'password-reset' | 'newsletter' | 'notification' | 'other';
+  type: 'verification' | 'password-reset' | 'newsletter' | 'notification' | 'verification-request' | 'other';
   status: 'pending' | 'sent' | 'failed' | 'bounced';
   sentAt?: string | null;
   /**
@@ -1168,6 +1233,39 @@ export interface EmailLog {
     | number
     | boolean
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "verification-requests".
+ */
+export interface VerificationRequest {
+  id: string;
+  user: string | User;
+  userName: string;
+  userEmail: string;
+  phone?: string | null;
+  address?: string | null;
+  /**
+   * User's ID card, passport, or driver's license
+   */
+  identificationDocument: string | Media;
+  /**
+   * Selfie holding the identification document
+   */
+  selfieWithId: string | Media;
+  /**
+   * Admin can change this to approve or reject the verification
+   */
+  status: 'pending' | 'approved' | 'rejected';
+  /**
+   * Notes about the verification decision (visible to user if rejected)
+   */
+  adminNotes?: string | null;
+  submittedAt?: string | null;
+  reviewedAt?: string | null;
+  reviewedBy?: (string | null) | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -1344,6 +1442,10 @@ export interface PayloadLockedDocument {
   id: string;
   document?:
     | ({
+        relationTo: 'amenities';
+        value: string | Amenity;
+      } | null)
+    | ({
         relationTo: 'pages';
         value: string | Page;
       } | null)
@@ -1368,10 +1470,6 @@ export interface PayloadLockedDocument {
         value: string | Property;
       } | null)
     | ({
-        relationTo: 'property-types';
-        value: string | PropertyType;
-      } | null)
-    | ({
         relationTo: 'neighborhoods';
         value: string | Neighborhood;
       } | null)
@@ -1390,6 +1488,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'email-logs';
         value: string | EmailLog;
+      } | null)
+    | ({
+        relationTo: 'verification-requests';
+        value: string | VerificationRequest;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1452,6 +1554,19 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "amenities_select".
+ */
+export interface AmenitiesSelect<T extends boolean = true> {
+  name?: T;
+  category?: T;
+  propertyTypes?: T;
+  description?: T;
+  icon?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1744,9 +1859,6 @@ export interface UsersSelect<T extends boolean = true> {
   verificationStatus?: T;
   phone?: T;
   address?: T;
-  identificationDocument?: T;
-  selfieWithId?: T;
-  verificationNotes?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -1769,7 +1881,6 @@ export interface PropertiesSelect<T extends boolean = true> {
   propertyType?: T;
   listingType?: T;
   price?: T;
-  currency?: T;
   neighborhood?: T;
   address?: T;
   coordinates?:
@@ -1778,21 +1889,39 @@ export interface PropertiesSelect<T extends boolean = true> {
         latitude?: T;
         longitude?: T;
       };
-  features?:
+  area?: T;
+  residentialFeatures?:
     | T
     | {
         bedrooms?: T;
         bathrooms?: T;
-        area?: T;
-        parking?: T;
-        furnished?: T;
-        amenities?:
-          | T
-          | {
-              amenity?: T;
-              id?: T;
-            };
+        floors?: T;
+        yearBuilt?: T;
       };
+  commercialFeatures?:
+    | T
+    | {
+        businessType?: T;
+        floors?: T;
+        offices?: T;
+        yearBuilt?: T;
+      };
+  industrialFeatures?:
+    | T
+    | {
+        industrialType?: T;
+        ceilingHeight?: T;
+        loadingDocks?: T;
+        powerSupply?: T;
+        yearBuilt?: T;
+      };
+  landFeatures?:
+    | T
+    | {
+        landType?: T;
+        topography?: T;
+      };
+  amenities?: T;
   images?:
     | T
     | {
@@ -1811,17 +1940,6 @@ export interface PropertiesSelect<T extends boolean = true> {
   status?: T;
   adminNotes?: T;
   featured?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "property-types_select".
- */
-export interface PropertyTypesSelect<T extends boolean = true> {
-  name?: T;
-  description?: T;
-  slug?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1938,6 +2056,26 @@ export interface EmailLogsSelect<T extends boolean = true> {
   htmlContent?: T;
   errorMessage?: T;
   metadata?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "verification-requests_select".
+ */
+export interface VerificationRequestsSelect<T extends boolean = true> {
+  user?: T;
+  userName?: T;
+  userEmail?: T;
+  phone?: T;
+  address?: T;
+  identificationDocument?: T;
+  selfieWithId?: T;
+  status?: T;
+  adminNotes?: T;
+  submittedAt?: T;
+  reviewedAt?: T;
+  reviewedBy?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -49,6 +49,10 @@ export const EmailLogs: CollectionConfig = {
           value: 'notification',
         },
         {
+          label: 'Verification Request',
+          value: 'verification-request',
+        },
+        {
           label: 'Other',
           value: 'other',
         },

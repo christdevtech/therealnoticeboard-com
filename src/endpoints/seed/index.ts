@@ -9,7 +9,6 @@ import { imageHero1 } from './image-hero-1'
 import { post1 } from './post-1'
 import { post2 } from './post-2'
 import { post3 } from './post-3'
-import { seedPropertyTypes } from './property-types'
 import { seedNeighborhoods } from './neighborhoods'
 import { seedFAQs } from './faqs'
 
@@ -22,7 +21,6 @@ const collections: CollectionSlug[] = [
   'form-submissions',
   'search',
   'properties',
-  'property-types',
   'neighborhoods',
   'inquiries',
   'faqs',
@@ -347,9 +345,6 @@ export const seed = async ({
       },
     }),
   ])
-
-  payload.logger.info(`— Seeding property types...`)
-  await seedPropertyTypes(payload)
 
   payload.logger.info(`— Seeding neighborhoods...`)
   await seedNeighborhoods(payload)
