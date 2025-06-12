@@ -8,13 +8,15 @@ export const metadata: Metadata = {
 
 export default function VerifyEmailPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Verify Your Email</h1>
-          <p className="text-gray-600">Activating your account...</p>
+    <div className="pt-24 pb-24 bg-background">
+      <div className="container flex items-center justify-center min-h-[60vh]">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-foreground mb-2">Verify Your Email</h1>
+            <p className="text-muted-foreground">Activating your account...</p>
+          </div>
+          <VerifyEmailForm />
         </div>
-        <VerifyEmailForm />
       </div>
     </div>
   )

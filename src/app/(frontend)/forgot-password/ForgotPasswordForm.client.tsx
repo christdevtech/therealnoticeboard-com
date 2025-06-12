@@ -90,10 +90,10 @@ export function ForgotPasswordForm() {
 
   if (isSuccess) {
     return (
-      <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
-        <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <div className="bg-card rounded-2xl shadow-xl p-8 text-center border border-border">
+        <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
           <svg
-            className="w-8 h-8 text-blue-600"
+            className="w-8 h-8 text-primary"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -106,15 +106,15 @@ export function ForgotPasswordForm() {
             />
           </svg>
         </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Check Your Email</h2>
-        <p className="text-gray-600 mb-6">
+        <h2 className="text-2xl font-bold text-foreground mb-2">Check Your Email</h2>
+        <p className="text-muted-foreground mb-6">
           We've sent a password reset link to <strong>{formData.email}</strong>. Please check your
           inbox and follow the instructions to reset your password.
         </p>
         <div className="space-y-3">
           <Link
             href="/login"
-            className="block w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+            className="block w-full bg-primary text-primary-foreground py-3 px-4 rounded-lg font-medium hover:bg-primary-hover transition-colors"
           >
             Back to Login
           </Link>
@@ -123,12 +123,12 @@ export function ForgotPasswordForm() {
               setIsSuccess(false)
               setFormData({ email: '' })
             }}
-            className="block w-full text-gray-600 py-3 px-4 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+            className="block w-full text-muted-foreground py-3 px-4 rounded-lg font-medium hover:bg-muted transition-colors"
           >
             Try Different Email
           </button>
         </div>
-        <p className="text-xs text-gray-500 mt-4">
+        <p className="text-xs text-muted-foreground mt-4">
           Didn't receive the email? Check your spam folder or try again in a few minutes.
         </p>
       </div>
@@ -136,17 +136,17 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+    <div className="bg-card rounded-2xl shadow-xl overflow-hidden border border-border">
       <form onSubmit={handleSubmit} className="p-8">
         {errors.general && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-600 text-sm">{errors.general}</p>
+          <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+            <p className="text-destructive text-sm">{errors.general}</p>
           </div>
         )}
 
         <div className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
               Email Address
             </label>
             <input
@@ -154,15 +154,15 @@ export function ForgotPasswordForm() {
               id="email"
               value={formData.email}
               onChange={(e) => handleInputChange(e.target.value)}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                errors.email ? 'border-red-300 bg-red-50' : 'border-gray-300'
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent transition-colors bg-input text-input-foreground ${
+                errors.email ? 'border-destructive bg-destructive/10' : 'border-border'
               }`}
               placeholder="Enter your email address"
               autoFocus
               autoComplete="email"
             />
-            {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
-            <p className="mt-2 text-sm text-gray-500">
+            {errors.email && <p className="mt-1 text-sm text-destructive">{errors.email}</p>}
+            <p className="mt-2 text-sm text-muted-foreground">
               Enter the email address associated with your account and we'll send you a link to
               reset your password.
             </p>
@@ -171,30 +171,11 @@ export function ForgotPasswordForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-lg font-medium hover:bg-primary-hover focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <div className="flex items-center justify-center">
-                <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-foreground mr-2"></div>
                 Sending Reset Link...
               </div>
             ) : (
@@ -204,10 +185,10 @@ export function ForgotPasswordForm() {
         </div>
       </form>
 
-      <div className="px-8 py-4 bg-gray-50 border-t">
-        <p className="text-center text-sm text-gray-600">
+      <div className="px-8 py-4 bg-muted border-t border-border">
+        <p className="text-center text-sm text-muted-foreground">
           Remember your password?{' '}
-          <Link href="/login" className="text-blue-600 hover:text-blue-700 font-medium">
+          <Link href="/login" className="text-primary hover:text-primary/80 font-medium">
             Back to Login
           </Link>
         </p>

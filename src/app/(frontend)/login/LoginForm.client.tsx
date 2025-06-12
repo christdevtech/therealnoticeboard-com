@@ -183,19 +183,19 @@ export function LoginForm() {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+    <div className="bg-card rounded-2xl shadow-xl overflow-hidden border border-border">
       <form onSubmit={handleSubmit} className="p-8">
         {errors.general && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-600 text-sm">{errors.general}</p>
+          <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+            <p className="text-destructive text-sm">{errors.general}</p>
             {showResendOption && (
-              <div className="mt-3 pt-3 border-t border-red-200">
-                <p className="text-sm text-gray-600 mb-2">Didn't receive the verification email?</p>
+              <div className="mt-3 pt-3 border-t border-destructive/20">
+                <p className="text-sm text-muted-foreground mb-2">Didn't receive the verification email?</p>
                 <button
                   type="button"
                   onClick={handleResendVerification}
                   disabled={resendState.isResending}
-                  className="text-sm text-blue-600 hover:text-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="text-sm text-primary hover:text-primary/80 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {resendState.isResending ? 'Sending...' : 'Resend verification email'}
                 </button>
@@ -205,22 +205,22 @@ export function LoginForm() {
         )}
 
         {resendState.resendSuccess && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-green-600 text-sm">
+          <div className="mb-6 p-4 bg-success/10 border border-success/20 rounded-lg">
+            <p className="text-success text-sm">
               Verification email sent successfully! Please check your inbox.
             </p>
           </div>
         )}
 
         {resendState.resendError && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-600 text-sm">{resendState.resendError}</p>
+          <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+            <p className="text-destructive text-sm">{resendState.resendError}</p>
           </div>
         )}
 
         <div className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
               Email Address
             </label>
             <input
@@ -228,18 +228,18 @@ export function LoginForm() {
               id="email"
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                errors.email ? 'border-red-300 bg-red-50' : 'border-gray-300'
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent transition-colors bg-input text-input-foreground ${
+                errors.email ? 'border-destructive bg-destructive/10' : 'border-border'
               }`}
               placeholder="Enter your email address"
               autoFocus
               autoComplete="email"
             />
-            {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+            {errors.email && <p className="mt-1 text-sm text-destructive">{errors.email}</p>}
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="password" className="block text-sm font-medium text-foreground mb-2">
               Password
             </label>
             <div className="relative">
@@ -248,8 +248,8 @@ export function LoginForm() {
                 id="password"
                 value={formData.password}
                 onChange={(e) => handleInputChange('password', e.target.value)}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors pr-12 ${
-                  errors.password ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent transition-colors pr-12 bg-input text-input-foreground ${
+                  errors.password ? 'border-destructive bg-destructive/10' : 'border-border'
                 }`}
                 placeholder="Enter your password"
                 autoComplete="current-password"
@@ -257,7 +257,7 @@ export function LoginForm() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground"
               >
                 {showPassword ? (
                   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -286,7 +286,7 @@ export function LoginForm() {
                 )}
               </button>
             </div>
-            {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
+            {errors.password && <p className="mt-1 text-sm text-destructive">{errors.password}</p>}
           </div>
 
           <div className="flex items-center justify-between">
@@ -295,16 +295,16 @@ export function LoginForm() {
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                className="h-4 w-4 text-primary focus:ring-ring border-border rounded"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-foreground">
                 Remember me
               </label>
             </div>
 
             <Link
               href="/forgot-password"
-              className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+              className="text-sm text-primary hover:text-primary/80 font-medium"
             >
               Forgot password?
             </Link>
@@ -313,7 +313,7 @@ export function LoginForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-primary text-primary-foreground py-3 px-4 rounded-lg font-medium hover:bg-primary-hover focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <div className="flex items-center justify-center">
@@ -346,10 +346,10 @@ export function LoginForm() {
         </div>
       </form>
 
-      <div className="px-8 py-4 bg-gray-50 border-t">
-        <p className="text-center text-sm text-gray-600">
+      <div className="px-8 py-4 bg-muted border-t border-border">
+        <p className="text-center text-sm text-muted-foreground">
           Don't have an account?{' '}
-          <Link href="/signup" className="text-blue-600 hover:text-blue-700 font-medium">
+          <Link href="/signup" className="text-primary hover:text-primary/80 font-medium">
             Sign up
           </Link>
         </p>

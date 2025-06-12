@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { verifiedOrAdmin } from '../access/verified'
 import { propertiesRead, propertiesUpdate, propertiesDelete } from '../access/properties'
+import { slugField } from '@/fields/slug'
 
 export const Properties: CollectionConfig = {
   slug: 'properties',
@@ -441,6 +442,7 @@ export const Properties: CollectionConfig = {
         condition: (data, siblingData, { user }) => user?.role === 'admin',
       },
     },
+    ...slugField(),
   ],
   timestamps: true,
 }

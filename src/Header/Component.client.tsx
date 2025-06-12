@@ -37,7 +37,10 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, className }) =
   }, [headerTheme, globalTheme])
 
   return (
-    <header className={`relative z-20 ${className}`} {...(theme ? { 'data-theme': theme } : {})}>
+    <header
+      className={`relative z-20 ${className} ${!headerTheme && 'border-b border-b-border'}`}
+      {...(theme ? { 'data-theme': theme } : {})}
+    >
       <div className="container">
         <div className="py-4 flex justify-between">
           <Link href="/">
