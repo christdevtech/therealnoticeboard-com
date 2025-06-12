@@ -930,6 +930,8 @@ export interface Property {
    * Mark as featured property for homepage display
    */
   featured?: boolean | null;
+  slug?: string | null;
+  slugLock?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1089,6 +1091,8 @@ export interface Faq {
    * Additional context for AI to understand when to use this FAQ
    */
   aiContext?: string | null;
+  slug?: string | null;
+  slugLock?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1177,6 +1181,8 @@ export interface KnowledgeBase {
    * Last update date for content freshness tracking
    */
   lastUpdated?: string | null;
+  slug?: string | null;
+  slugLock?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1916,6 +1922,8 @@ export interface PropertiesSelect<T extends boolean = true> {
   status?: T;
   adminNotes?: T;
   featured?: T;
+  slug?: T;
+  slugLock?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1985,6 +1993,8 @@ export interface FaqsSelect<T extends boolean = true> {
         id?: T;
       };
   aiContext?: T;
+  slug?: T;
+  slugLock?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2015,6 +2025,8 @@ export interface KnowledgeBaseSelect<T extends boolean = true> {
   relatedFAQs?: T;
   aiContext?: T;
   lastUpdated?: T;
+  slug?: T;
+  slugLock?: T;
   updatedAt?: T;
   createdAt?: T;
 }

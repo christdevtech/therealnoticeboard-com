@@ -16,6 +16,7 @@ import {
 import { Banner } from '@/blocks/Banner/config'
 import { Code } from '@/blocks/Code/config'
 import { MediaBlock } from '@/blocks/MediaBlock/config'
+import { slugField } from '@/fields/slug'
 
 export const FAQs: CollectionConfig = {
   slug: 'faqs',
@@ -171,6 +172,7 @@ export const FAQs: CollectionConfig = {
         description: 'Additional context for AI to understand when to use this FAQ',
       },
     },
+    ...slugField()
   ],
   timestamps: true,
 }

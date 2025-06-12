@@ -1,8 +1,10 @@
 import type { CollectionConfig } from 'payload'
 
-import { verifiedOrAdmin } from '../access/verified'
-import { propertiesRead, propertiesUpdate, propertiesDelete } from '../access/properties'
+import { verifiedOrAdmin } from '../../access/verified'
+import { propertiesRead, propertiesUpdate, propertiesDelete } from '../../access/properties'
 import { slugField } from '@/fields/slug'
+import { generatePreviewPath } from '../../utilities/generatePreviewPath'
+import { revalidateDelete, revalidateProperty } from './hooks/revalidateProperty'
 
 export const Properties: CollectionConfig = {
   slug: 'properties',
@@ -15,6 +17,23 @@ export const Properties: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'propertyType', 'listingType', 'price', 'status', 'owner'],
+    livePreview: {
+      url: ({ data, req }) => {
+        const path = generatePreviewPath({
+          slug: typeof data?.slug === 'string' ? data.slug : '',
+          collection: 'properties',
+          req,
+        })
+
+        return path
+      },
+    },
+    preview: (data, { req }) =>
+      generatePreviewPath({
+        slug: typeof data?.slug === 'string' ? data.slug : '',
+        collection: 'properties',
+        req,
+      }),
   },
   fields: [
     {
@@ -444,5 +463,9 @@ export const Properties: CollectionConfig = {
     },
     ...slugField(),
   ],
+  hooks: {
+    afterChange: [revalidateProperty],
+    afterDelete: [revalidateDelete],
+  },
   timestamps: true,
 }
