@@ -5,6 +5,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { DashboardContent } from './DashboardContent.client'
 import type { User } from '@/payload-types'
+import PageClient from './page.client'
 
 export const metadata: Metadata = {
   title: 'Dashboard | The Real Notice Board',
@@ -30,6 +31,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <PageClient />
       <DashboardContent user={user as User} />
     </div>
   )
