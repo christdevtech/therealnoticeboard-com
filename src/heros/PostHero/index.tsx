@@ -1,14 +1,21 @@
-import { formatDateTime } from 'src/utilities/formatDateTime'
-import React from 'react'
+'use client'
+import { useHeaderTheme } from '@/providers/HeaderTheme'
+import React, { useEffect } from 'react'
 
 import type { Post } from '@/payload-types'
 
 import { Media } from '@/components/Media'
 import { formatAuthors } from '@/utilities/formatAuthors'
+import { formatDateTime } from '@/utilities/formatDateTime'
 
 export const PostHero: React.FC<{
   post: Post
 }> = ({ post }) => {
+  const { setHeaderTheme } = useHeaderTheme()
+
+  useEffect(() => {
+    setHeaderTheme('dark')
+  }, [setHeaderTheme])
   const { categories, heroImage, populatedAuthors, publishedAt, title } = post
 
   const hasAuthors =

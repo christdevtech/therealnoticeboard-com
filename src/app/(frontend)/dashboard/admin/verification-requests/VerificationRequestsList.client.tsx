@@ -26,13 +26,13 @@ export const VerificationRequestsList: React.FC<VerificationRequestsListProps> =
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800'
+        return 'bg-warning/20 text-warning-foreground'
       case 'approved':
-        return 'bg-green-100 text-green-800'
+        return 'bg-success/20 text-success-foreground'
       case 'rejected':
-        return 'bg-red-100 text-red-800'
+        return 'bg-error/20 text-error-foreground'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-muted text-muted-foreground'
     }
   }
 
@@ -87,72 +87,72 @@ export const VerificationRequestsList: React.FC<VerificationRequestsListProps> =
     <div className="space-y-6">
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="bg-card rounded-lg shadow-theme border border-card p-4">
           <div className="flex items-center">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="p-2 bg-primary/20 rounded-lg">
+              <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
             </div>
             <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">Total</p>
-              <p className="text-xl font-bold text-gray-900">{requests.length}</p>
+              <p className="text-sm font-medium text-muted-foreground">Total</p>
+              <p className="text-xl font-bold text-card-foreground">{requests.length}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="bg-card rounded-lg shadow-theme border border-card p-4">
           <div className="flex items-center">
-            <div className="p-2 bg-yellow-100 rounded-lg">
-              <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="p-2 bg-warning/20 rounded-lg">
+              <svg className="w-5 h-5 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">Pending</p>
-              <p className="text-xl font-bold text-gray-900">{pendingCount}</p>
+              <p className="text-sm font-medium text-muted-foreground">Pending</p>
+              <p className="text-xl font-bold text-card-foreground">{pendingCount}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="bg-card rounded-lg shadow-theme border border-card p-4">
           <div className="flex items-center">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="p-2 bg-success/20 rounded-lg">
+              <svg className="w-5 h-5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
             <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">Approved</p>
-              <p className="text-xl font-bold text-gray-900">{approvedCount}</p>
+              <p className="text-sm font-medium text-muted-foreground">Approved</p>
+              <p className="text-xl font-bold text-card-foreground">{approvedCount}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="bg-card rounded-lg shadow-theme border border-card p-4">
           <div className="flex items-center">
-            <div className="p-2 bg-red-100 rounded-lg">
-              <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="p-2 bg-error/20 rounded-lg">
+              <svg className="w-5 h-5 text-error" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </div>
             <div className="ml-3">
-              <p className="text-sm font-medium text-gray-600">Rejected</p>
-              <p className="text-xl font-bold text-gray-900">{rejectedCount}</p>
+              <p className="text-sm font-medium text-muted-foreground">Rejected</p>
+              <p className="text-xl font-bold text-card-foreground">{rejectedCount}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Filters and Actions */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div className="bg-card rounded-lg shadow-theme border border-card p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <label className="text-sm font-medium text-gray-700">Filter by status:</label>
+            <label className="text-sm font-medium text-muted-foreground">Filter by status:</label>
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value as any)}
-              className="border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="border border-border rounded-md px-3 py-1.5 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             >
               <option value="all">All Requests</option>
               <option value="pending">Pending</option>
@@ -164,7 +164,7 @@ export const VerificationRequestsList: React.FC<VerificationRequestsListProps> =
           <button
             onClick={refreshRequests}
             disabled={loading}
-            className="inline-flex items-center px-3 py-1.5 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700 transition-colors disabled:opacity-50"
+            className="inline-flex items-center px-3 py-1.5 bg-secondary text-secondary-foreground text-sm rounded-md hover:bg-secondary-hover transition-colors disabled:opacity-50"
           >
             {loading ? (
               <svg className="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -182,38 +182,38 @@ export const VerificationRequestsList: React.FC<VerificationRequestsListProps> =
       </div>
 
       {/* Requests List */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-card rounded-lg shadow-theme border border-card overflow-hidden">
         {filteredRequests.length === 0 ? (
           <div className="text-center py-12">
-            <svg className="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-12 h-12 text-muted-foreground mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
-            <p className="text-gray-500 font-medium">No verification requests found</p>
-            <p className="text-sm text-gray-400 mt-1">
+            <p className="text-muted-foreground font-medium">No verification requests found</p>
+            <p className="text-sm text-muted-foreground mt-1">
               {filter === 'all' ? 'No requests have been submitted yet' : `No ${filter} requests found`}
             </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-border">
+              <thead className="bg-muted">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     User
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Contact
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Submitted
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Reviewed
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>

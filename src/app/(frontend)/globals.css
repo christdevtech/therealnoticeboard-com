@@ -14,73 +14,159 @@
   }
 
   :root {
+    /* Base colors - Light theme */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
-    --card: 240 5% 96%;
+    /* Card colors */
+    --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
+    --card-border: 214.3 31.8% 91.4%;
 
+    /* Popover colors */
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
+    /* Primary brand colors */
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
+    --primary-hover: 222.2 47.4% 8%;
 
+    /* Secondary colors */
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary-hover: 210 40% 92%;
 
+    /* Muted colors */
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
+    /* Accent colors */
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
+    --accent-hover: 210 40% 92%;
 
+    /* Status colors */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
+    --destructive-hover: 0 84.2% 55%;
 
-    --border: 240 6% 80%;
+    --success: 142 76% 36%;
+    --success-foreground: 355 100% 97%;
+    --success-hover: 142 76% 32%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 48 96% 89%;
+    --warning-hover: 38 92% 45%;
+
+    --error: 0 84.2% 60.2%;
+    --error-foreground: 210 40% 98%;
+    --error-hover: 0 84.2% 55%;
+
+    /* Form elements */
+    --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
+    --input-foreground: 222.2 84% 4.9%;
     --ring: 222.2 84% 4.9%;
 
-    --radius: 0.2rem;
+    /* Navigation */
+    --nav-background: 0 0% 100%;
+    --nav-foreground: 222.2 84% 4.9%;
+    --nav-border: 214.3 31.8% 91.4%;
 
-    --success: 196 52% 74%;
-    --warning: 34 89% 85%;
-    --error: 10 100% 86%;
+    /* Sidebar */
+    --sidebar-background: 210 40% 98%;
+    --sidebar-foreground: 222.2 84% 4.9%;
+    --sidebar-border: 214.3 31.8% 91.4%;
+
+    /* Content areas */
+    --content-background: 0 0% 100%;
+    --content-foreground: 222.2 84% 4.9%;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+    --radius: 0.5rem;
   }
 
   [data-theme='dark'] {
-    --background: 0 0% 0%;
+    /* Base colors - Dark theme */
+    --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
-    --card: 0 0% 4%;
+    /* Card colors */
+    --card: 222.2 84% 6%;
     --card-foreground: 210 40% 98%;
+    --card-border: 217.2 32.6% 17.5%;
 
+    /* Popover colors */
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
+    /* Primary brand colors */
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
+    --primary-hover: 210 40% 95%;
 
+    /* Secondary colors */
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
+    --secondary-hover: 217.2 32.6% 20%;
 
+    /* Muted colors */
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
+    /* Accent colors */
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
+    --accent-hover: 217.2 32.6% 20%;
 
-    --destructive: 0 62.8% 30.6%;
+    /* Status colors */
+    --destructive: 0 62.8% 50%;
     --destructive-foreground: 210 40% 98%;
+    --destructive-hover: 0 62.8% 45%;
 
-    --border: 0, 0%, 15%, 0.8;
+    --success: 142 76% 45%;
+    --success-foreground: 142 76% 10%;
+    --success-hover: 142 76% 50%;
+
+    --warning: 38 92% 60%;
+    --warning-foreground: 38 92% 15%;
+    --warning-hover: 38 92% 65%;
+
+    --error: 0 62.8% 50%;
+    --error-foreground: 210 40% 98%;
+    --error-hover: 0 62.8% 45%;
+
+    /* Form elements */
+    --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
+    --input-foreground: 210 40% 98%;
     --ring: 212.7 26.8% 83.9%;
 
-    --success: 196 100% 14%;
-    --warning: 34 51% 25%;
-    --error: 10 39% 43%;
+    /* Navigation */
+    --nav-background: 222.2 84% 4.9%;
+    --nav-foreground: 210 40% 98%;
+    --nav-border: 217.2 32.6% 17.5%;
+
+    /* Sidebar */
+    --sidebar-background: 222.2 84% 6%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-border: 217.2 32.6% 17.5%;
+
+    /* Content areas */
+    --content-background: 222.2 84% 4.9%;
+    --content-foreground: 210 40% 98%;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
   }
 }
 
@@ -90,6 +176,112 @@
   }
   body {
     @apply bg-background text-foreground min-h-[100vh] flex flex-col;
+  }
+}
+
+@layer utilities {
+  /* Theme-aware utility classes */
+  .bg-nav {
+    background-color: hsl(var(--nav-background));
+  }
+  .text-nav {
+    color: hsl(var(--nav-foreground));
+  }
+  .border-nav {
+    border-color: hsl(var(--nav-border));
+  }
+  
+  .bg-sidebar {
+    background-color: hsl(var(--sidebar-background));
+  }
+  .text-sidebar {
+    color: hsl(var(--sidebar-foreground));
+  }
+  .border-sidebar {
+    border-color: hsl(var(--sidebar-border));
+  }
+  
+  .bg-content {
+    background-color: hsl(var(--content-background));
+  }
+  .text-content {
+    color: hsl(var(--content-foreground));
+  }
+  
+  .border-card {
+    border-color: hsl(var(--card-border));
+  }
+  
+  .text-input {
+    color: hsl(var(--input-foreground));
+  }
+  
+  /* Status colors with hover states */
+  .bg-success {
+    background-color: hsl(var(--success));
+  }
+  .text-success {
+    color: hsl(var(--success));
+  }
+  .text-success-foreground {
+    color: hsl(var(--success-foreground));
+  }
+  .hover\:bg-success-hover:hover {
+    background-color: hsl(var(--success-hover));
+  }
+  
+  .bg-warning {
+    background-color: hsl(var(--warning));
+  }
+  .text-warning {
+    color: hsl(var(--warning));
+  }
+  .text-warning-foreground {
+    color: hsl(var(--warning-foreground));
+  }
+  .hover\:bg-warning-hover:hover {
+    background-color: hsl(var(--warning-hover));
+  }
+  
+  .bg-error {
+    background-color: hsl(var(--error));
+  }
+  .text-error {
+    color: hsl(var(--error));
+  }
+  .text-error-foreground {
+    color: hsl(var(--error-foreground));
+  }
+  .hover\:bg-error-hover:hover {
+    background-color: hsl(var(--error-hover));
+  }
+  
+  /* Hover states for existing colors */
+  .hover\:bg-primary-hover:hover {
+    background-color: hsl(var(--primary-hover));
+  }
+  .hover\:bg-secondary-hover:hover {
+    background-color: hsl(var(--secondary-hover));
+  }
+  .hover\:bg-accent-hover:hover {
+    background-color: hsl(var(--accent-hover));
+  }
+  .hover\:bg-destructive-hover:hover {
+    background-color: hsl(var(--destructive-hover));
+  }
+  
+  /* Shadow utilities */
+  .shadow-theme-sm {
+    box-shadow: var(--shadow-sm);
+  }
+  .shadow-theme {
+    box-shadow: var(--shadow);
+  }
+  .shadow-theme-md {
+    box-shadow: var(--shadow-md);
+  }
+  .shadow-theme-lg {
+    box-shadow: var(--shadow-lg);
   }
 }
 

@@ -57,13 +57,13 @@ export const VerificationRequestReview: React.FC<VerificationRequestReviewProps>
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200'
+        return 'bg-warning/20 text-warning-foreground border-warning'
       case 'approved':
-        return 'bg-green-100 text-green-800 border-green-200'
+        return 'bg-success/20 text-success-foreground border-success'
       case 'rejected':
-        return 'bg-red-100 text-red-800 border-red-200'
+        return 'bg-error/20 text-error-foreground border-error'
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200'
+        return 'bg-muted text-muted-foreground border-border'
     }
   }
 
@@ -106,7 +106,7 @@ export const VerificationRequestReview: React.FC<VerificationRequestReviewProps>
     <>
       <div className="space-y-6">
         {/* Status Card */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-card rounded-lg shadow-theme border border-card p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div
@@ -115,13 +115,13 @@ export const VerificationRequestReview: React.FC<VerificationRequestReviewProps>
                 {getStatusIcon(verificationRequest.status)}
                 <span className="ml-2 capitalize">{verificationRequest.status}</span>
               </div>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-muted-foreground">
                 Submitted on{' '}
                 {verificationRequest.submittedAt &&
                   new Date(verificationRequest.submittedAt).toLocaleDateString()}
               </span>
               {verificationRequest.reviewedAt && (
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-muted-foreground">
                   • Reviewed on {new Date(verificationRequest.reviewedAt).toLocaleDateString()}
                 </span>
               )}
@@ -130,30 +130,30 @@ export const VerificationRequestReview: React.FC<VerificationRequestReviewProps>
         </div>
 
         {/* User Information */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">User Information</h2>
+        <div className="bg-card rounded-lg shadow-theme border border-card p-6">
+          <h2 className="text-lg font-semibold text-card-foreground mb-4">User Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-              <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">Full Name</label>
+              <p className="text-sm text-card-foreground bg-muted p-3 rounded-md">
                 {verificationRequest.userName}
               </p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-              <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">Email Address</label>
+              <p className="text-sm text-card-foreground bg-muted p-3 rounded-md">
                 {verificationRequest.userEmail}
               </p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-              <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">Phone Number</label>
+              <p className="text-sm text-card-foreground bg-muted p-3 rounded-md">
                 {verificationRequest.phone}
               </p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
-              <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-md">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">Address</label>
+              <p className="text-sm text-card-foreground bg-muted p-3 rounded-md">
                 {verificationRequest.address}
               </p>
             </div>
@@ -161,15 +161,15 @@ export const VerificationRequestReview: React.FC<VerificationRequestReviewProps>
         </div>
 
         {/* Documents */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Verification Documents</h2>
+        <div className="bg-card rounded-lg shadow-theme border border-card p-6">
+          <h2 className="text-lg font-semibold text-card-foreground mb-4">Verification Documents</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Identification Document */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-muted-foreground mb-2">
                 Identification Document
               </label>
-              <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+              <div className="border border-border rounded-lg p-4 bg-muted">
                 <div className="aspect-w-16 aspect-h-9 mb-3">
                   <Media
                     resource={verificationRequest.identificationDocument}
@@ -183,7 +183,7 @@ export const VerificationRequestReview: React.FC<VerificationRequestReviewProps>
                     }
                   />
                 </div>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   {typeof verificationRequest.identificationDocument === 'object' &&
                     verificationRequest.identificationDocument.filename}
                 </p>
@@ -194,7 +194,7 @@ export const VerificationRequestReview: React.FC<VerificationRequestReviewProps>
                       resource: verificationRequest.identificationDocument,
                     })
                   }
-                  className="mt-2 text-sm text-blue-600 hover:text-blue-800"
+                  className="mt-2 text-sm text-primary hover:text-primary-hover"
                 >
                   View Full Size
                 </button>
