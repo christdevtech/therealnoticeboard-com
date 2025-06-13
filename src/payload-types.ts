@@ -368,7 +368,7 @@ export interface Page {
       | null;
     media?: (string | null) | Media;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
+  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | PropertyArchiveBlock)[];
   meta?: {
     title?: string | null;
     /**
@@ -796,6 +796,81 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PropertyArchiveBlock".
+ */
+export interface PropertyArchiveBlock {
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  populateBy?: ('collection' | 'selection') | null;
+  relationTo?: 'properties' | null;
+  propertyTypes?: ('residential' | 'commercial' | 'industrial' | 'land')[] | null;
+  listingTypes?: ('sale' | 'rent')[] | null;
+  neighborhoods?: (string | Neighborhood)[] | null;
+  limit?: number | null;
+  selectedDocs?:
+    | {
+        relationTo: 'properties';
+        value: string | Property;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'propertyArchive';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "neighborhoods".
+ */
+export interface Neighborhood {
+  id: string;
+  name: string;
+  /**
+   * City or town name
+   */
+  city: string;
+  region:
+    | 'adamawa'
+    | 'centre'
+    | 'east'
+    | 'far-north'
+    | 'littoral'
+    | 'north'
+    | 'northwest'
+    | 'south'
+    | 'southwest'
+    | 'west';
+  /**
+   * Brief description of the neighborhood
+   */
+  description?: string | null;
+  coordinates?: {
+    /**
+     * Latitude coordinate
+     */
+    latitude?: number | null;
+    /**
+     * Longitude coordinate
+     */
+    longitude?: number | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "properties".
  */
 export interface Property {
@@ -904,6 +979,14 @@ export interface Property {
    * Select amenities available for this property
    */
   amenities?: (string | Amenity)[] | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+    description?: string | null;
+  };
   contactInfo: {
     phone: string;
     email?: string | null;
@@ -932,45 +1015,6 @@ export interface Property {
   featured?: boolean | null;
   slug?: string | null;
   slugLock?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "neighborhoods".
- */
-export interface Neighborhood {
-  id: string;
-  name: string;
-  /**
-   * City or town name
-   */
-  city: string;
-  region:
-    | 'adamawa'
-    | 'centre'
-    | 'east'
-    | 'far-north'
-    | 'littoral'
-    | 'north'
-    | 'northwest'
-    | 'south'
-    | 'southwest'
-    | 'west';
-  /**
-   * Brief description of the neighborhood
-   */
-  description?: string | null;
-  coordinates?: {
-    /**
-     * Latitude coordinate
-     */
-    latitude?: number | null;
-    /**
-     * Longitude coordinate
-     */
-    longitude?: number | null;
-  };
   updatedAt: string;
   createdAt: string;
 }
@@ -1592,6 +1636,7 @@ export interface PagesSelect<T extends boolean = true> {
         mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
+        propertyArchive?: T | PropertyArchiveBlockSelect<T>;
       };
   meta?:
     | T
@@ -1688,6 +1733,22 @@ export interface FormBlockSelect<T extends boolean = true> {
   form?: T;
   enableIntro?: T;
   introContent?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PropertyArchiveBlock_select".
+ */
+export interface PropertyArchiveBlockSelect<T extends boolean = true> {
+  introContent?: T;
+  populateBy?: T;
+  relationTo?: T;
+  propertyTypes?: T;
+  listingTypes?: T;
+  neighborhoods?: T;
+  limit?: T;
+  selectedDocs?: T;
   id?: T;
   blockName?: T;
 }
@@ -1909,6 +1970,13 @@ export interface PropertiesSelect<T extends boolean = true> {
         topography?: T;
       };
   amenities?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
   contactInfo?:
     | T
     | {

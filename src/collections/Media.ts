@@ -20,7 +20,7 @@ export const Media: CollectionConfig = {
   access: {
     create: authenticated,
     delete: mediaDelete,
-    read: mediaRead,
+    read: anyone,
     update: mediaUpdate,
   },
   fields: [

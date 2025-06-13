@@ -5,6 +5,13 @@ import { propertiesRead, propertiesUpdate, propertiesDelete } from '../../access
 import { slugField } from '@/fields/slug'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { revalidateDelete, revalidateProperty } from './hooks/revalidateProperty'
+import {
+  MetaDescriptionField,
+  MetaImageField,
+  MetaTitleField,
+  OverviewField,
+  PreviewField,
+} from '@payloadcms/plugin-seo/fields'
 
 export const Properties: CollectionConfig = {
   slug: 'properties',
@@ -13,6 +20,19 @@ export const Properties: CollectionConfig = {
     read: propertiesRead,
     update: propertiesUpdate,
     delete: propertiesDelete,
+  },
+  defaultPopulate: {
+    title: true,
+    propertyType: true,
+    listingType: true,
+    area: true,
+    images: true,
+    owner: true,
+    neighborhood: true,
+    meta: {
+      image: true,
+      description: true,
+    },
   },
   admin: {
     useAsTitle: 'title',
@@ -89,6 +109,7 @@ export const Properties: CollectionConfig = {
               type: 'upload',
               relationTo: 'media',
               hasMany: true,
+              maxDepth: 2,
             },
             {
               name: 'area',
@@ -337,7 +358,29 @@ export const Properties: CollectionConfig = {
             },
           ],
         },
-
+        {
+          name: 'meta',
+          label: 'SEO',
+          fields: [
+            OverviewField({
+              titlePath: 'meta.title',
+              descriptionPath: 'meta.description',
+              imagePath: 'meta.image',
+            }),
+            MetaTitleField({
+              hasGenerateFn: true,
+            }),
+            MetaImageField({
+              relationTo: 'media',
+            }),
+            MetaDescriptionField({}),
+            PreviewField({
+              hasGenerateFn: true,
+              titlePath: 'meta.title',
+              descriptionPath: 'meta.description',
+            }),
+          ],
+        },
         {
           label: 'Contact Information',
           fields: [

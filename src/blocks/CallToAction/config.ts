@@ -1,10 +1,13 @@
 import type { Block } from 'payload'
 
 import {
+  ChecklistFeature,
   FixedToolbarFeature,
   HeadingFeature,
   InlineToolbarFeature,
   lexicalEditor,
+  OrderedListFeature,
+  UnorderedListFeature,
 } from '@payloadcms/richtext-lexical'
 
 import { linkGroup } from '../../fields/linkGroup'
@@ -23,6 +26,9 @@ export const CallToAction: Block = {
             HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
             FixedToolbarFeature(),
             InlineToolbarFeature(),
+            OrderedListFeature(),
+            UnorderedListFeature(),
+            ChecklistFeature(),
           ]
         },
       }),
