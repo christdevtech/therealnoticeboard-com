@@ -38,7 +38,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, className }) =
 
   return (
     <header
-      className={`relative z-20 ${className} ${!headerTheme && 'border-b border-b-border'}`}
+      className={`relative z-20 ${className} ${!headerTheme && 'border-b border-b-border bg-primary-foreground'}`}
       {...(theme ? { 'data-theme': theme } : {})}
     >
       <div className="container">

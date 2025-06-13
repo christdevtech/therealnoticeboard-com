@@ -51,7 +51,10 @@ export const PropertyHero: React.FC<{
   const [isDragging, setIsDragging] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
+  const [imageSize, setImageSize] = useState({ width: 0, height: 0 })
+  const [zoomLevel, setZoomLevel] = useState(1.5)
   const imageContainerRef = useRef<HTMLDivElement>(null)
+  const imageRef = useRef<HTMLImageElement>(null)
 
   const firstImage = images && Array.isArray(images) && images.length > 0 ? images[0] : null
   const metaImage = meta?.image && typeof meta.image === 'object' ? meta.image : null
@@ -115,11 +118,37 @@ export const PropertyHero: React.FC<{
     setIsZoomed(false)
   }, [allImages.length])
 
+  const calculateOptimalZoom = () => {
+    if (!imageRef.current || !imageContainerRef.current) return 1.5
+
+    const containerRect = imageContainerRef.current.getBoundingClientRect()
+    const imageRect = imageRef.current.getBoundingClientRect()
+
+    // Calculate how much we can zoom while keeping the image larger than viewport
+    const containerWidth = containerRect.width
+    const containerHeight = containerRect.height
+    const imageWidth = imageRect.width
+    const imageHeight = imageRect.height
+
+    // If image is smaller than container, zoom to fill at least 80% of container
+    const widthRatio = containerWidth / imageWidth
+    const heightRatio = containerHeight / imageHeight
+    const minZoom = Math.max(widthRatio, heightRatio) * 0.8
+
+    // Ensure minimum zoom of 1.5x and maximum of 3x
+    return Math.max(1.5, Math.min(3, minZoom))
+  }
+
   const toggleZoom = () => {
     setIsZoomed((prev) => {
       if (prev) {
         // Reset position when zooming out
         setPosition({ x: 0, y: 0 })
+        setZoomLevel(1.5)
+      } else {
+        // Calculate optimal zoom level
+        const optimalZoom = calculateOptimalZoom()
+        setZoomLevel(optimalZoom)
       }
       return !prev
     })
@@ -128,7 +157,7 @@ export const PropertyHero: React.FC<{
   // Handle mouse down for dragging
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!isZoomed) return
-    
+
     e.preventDefault()
     setIsDragging(true)
     setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y })
@@ -137,10 +166,10 @@ export const PropertyHero: React.FC<{
   // Handle mouse move for dragging
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !isZoomed) return
-    
+
     const newX = e.clientX - dragStart.x
     const newY = e.clientY - dragStart.y
-    
+
     setPosition({ x: newX, y: newY })
   }
 
@@ -151,20 +180,22 @@ export const PropertyHero: React.FC<{
 
   // Handle touch events for mobile
   const handleTouchStart = (e: React.TouchEvent) => {
-    if (!isZoomed) return
-    
+    if (!isZoomed || !e.touches[0]) return
+
+    e.preventDefault()
     const touch = e.touches[0]
     setIsDragging(true)
     setDragStart({ x: touch.clientX - position.x, y: touch.clientY - position.y })
   }
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging || !isZoomed) return
-    
+    if (!isDragging || !isZoomed || !e.touches[0]) return
+
+    e.preventDefault()
     const touch = e.touches[0]
     const newX = touch.clientX - dragStart.x
     const newY = touch.clientY - dragStart.y
-    
+
     setPosition({ x: newX, y: newY })
   }
 
@@ -192,10 +223,10 @@ export const PropertyHero: React.FC<{
           break
         // Arrow keys for moving the image when zoomed
         case 'ArrowUp':
-          if (isZoomed) setPosition(prev => ({ ...prev, y: prev.y + 20 }))
+          if (isZoomed) setPosition((prev) => ({ ...prev, y: prev.y + 20 }))
           break
         case 'ArrowDown':
-          if (isZoomed) setPosition(prev => ({ ...prev, y: prev.y - 20 }))
+          if (isZoomed) setPosition((prev) => ({ ...prev, y: prev.y - 20 }))
           break
         case 'Home':
           if (isZoomed) setPosition({ x: 0, y: 0 })
@@ -206,17 +237,17 @@ export const PropertyHero: React.FC<{
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isLightboxOpen, nextImage, prevImage, isZoomed])
-  
+
   // Add global mouse/touch event listeners for dragging outside the image
   useEffect(() => {
     if (!isLightboxOpen || !isZoomed) return
-    
+
     const handleGlobalMouseUp = () => setIsDragging(false)
     const handleGlobalTouchEnd = () => setIsDragging(false)
-    
+
     window.addEventListener('mouseup', handleGlobalMouseUp)
     window.addEventListener('touchend', handleGlobalTouchEnd)
-    
+
     return () => {
       window.removeEventListener('mouseup', handleGlobalMouseUp)
       window.removeEventListener('touchend', handleGlobalTouchEnd)
@@ -400,21 +431,6 @@ export const PropertyHero: React.FC<{
 
             {/* Map Section */}
             <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="text-xl font-semibold text-foreground">Location</h3>
-                {getDirectionsUrl() && (
-                  <a
-                    href={getDirectionsUrl() || '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-sm font-medium text-primary hover:text-primary-hover transition-colors"
-                  >
-                    <Navigation className="w-4 h-4" />
-                    Get Directions
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                )}
-              </div>
               <div className="aspect-[4/3] rounded-lg overflow-hidden border border-border">
                 {process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ? (
                   <Map
@@ -477,7 +493,22 @@ export const PropertyHero: React.FC<{
 
               {neighborhood && typeof neighborhood === 'object' && (
                 <div className="bg-secondary p-4 rounded-lg">
-                  <h4 className="font-medium text-foreground mb-2">Neighborhood</h4>
+                  <div className="flex justify-between items-center">
+                    <h4 className="font-medium text-foreground mb-2">Neighborhood</h4>{' '}
+                    {getDirectionsUrl() && (
+                      <a
+                        href={getDirectionsUrl() || '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-sm font-medium text-primary hover:text-primary-hover transition-colors"
+                      >
+                        <Navigation className="w-4 h-4" />
+                        Get Directions
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    )}
+                  </div>
+
                   <p className="text-muted-foreground">{neighborhood.name}</p>
                   {neighborhood.description && (
                     <p className="text-sm text-muted-foreground mt-1">{neighborhood.description}</p>
@@ -500,11 +531,11 @@ export const PropertyHero: React.FC<{
                 <button
                   onClick={toggleZoom}
                   className="p-2 bg-card shadow-theme-md text-card-foreground rounded-full hover:bg-card/90 transition-colors"
-                  aria-label={isZoomed ? "Zoom out" : "Zoom in"}
+                  aria-label={isZoomed ? 'Zoom out' : 'Zoom in'}
                 >
                   <ZoomIn className="w-6 h-6" />
                 </button>
-                
+
                 {/* Move Indicator - Only show when zoomed */}
                 {isZoomed && (
                   <div className="p-2 bg-card shadow-theme-md text-card-foreground rounded-full flex items-center gap-1">
@@ -513,7 +544,7 @@ export const PropertyHero: React.FC<{
                   </div>
                 )}
               </div>
-              
+
               {/* Close Button */}
               <button
                 onClick={closeLightbox}
@@ -550,10 +581,10 @@ export const PropertyHero: React.FC<{
             </div>
 
             {/* Main Image Container */}
-            <div 
+            <div
               ref={imageContainerRef}
               className={cn(
-                'max-w-full max-h-full overflow-hidden',
+                'w-full h-full flex items-center justify-center overflow-hidden',
                 isZoomed ? 'cursor-move' : 'cursor-zoom-in',
               )}
               style={{
@@ -569,19 +600,42 @@ export const PropertyHero: React.FC<{
               onTouchEnd={handleTouchEnd}
             >
               {typeof allImages[currentImageIndex] !== 'string' && (
-                <div 
+                <div
                   className={cn(
-                    'transition-transform',
-                    isZoomed ? 'scale-150' : 'scale-100'
+                    'transition-transform duration-300 ease-out',
+                    isZoomed ? 'origin-center' : 'origin-center',
                   )}
                   style={{
-                    transform: isZoomed ? `scale(1.5) translate(${position.x}px, ${position.y}px)` : 'scale(1)',
+                    transform: isZoomed
+                      ? `scale(${zoomLevel}) translate(${position.x / zoomLevel}px, ${position.y / zoomLevel}px)`
+                      : 'scale(1)',
+                    maxWidth: isZoomed ? 'none' : '100%',
+                    maxHeight: isZoomed ? 'none' : '100%',
                   }}
                 >
                   <Media
                     resource={allImages[currentImageIndex]}
-                    className="max-w-full max-h-full object-contain"
-                    imgClassName="max-w-full max-h-full object-contain"
+                    className={cn(
+                      'object-contain',
+                      isZoomed ? 'min-w-[80%] min-h-[80%]' : 'max-w-full max-h-full',
+                    )}
+                    imgClassName={cn(
+                      'object-contain',
+                      isZoomed ? 'min-w-[80%] min-h-[80%]' : 'max-w-full max-h-full',
+                    )}
+                    onLoad={() => {
+                      // Use a timeout to ensure the image is fully loaded
+                      setTimeout(() => {
+                        const imgElement = imageContainerRef.current?.querySelector('img')
+                        if (imgElement && !imageRef.current) {
+                          imageRef.current = imgElement
+                          setImageSize({
+                            width: imgElement.naturalWidth,
+                            height: imgElement.naturalHeight,
+                          })
+                        }
+                      }, 0)
+                    }}
                   />
                 </div>
               )}

@@ -987,6 +987,30 @@ export interface Property {
     image?: (string | null) | Media;
     description?: string | null;
   };
+  /**
+   * Current condition of the property
+   */
+  propertyCondition: 'new' | 'good' | 'fair' | 'needs_renovation';
+  /**
+   * When the property becomes available
+   */
+  availabilityDate: string;
+  /**
+   * Link to 360° tours or video walkthroughs
+   */
+  virtualTourUrl?: string | null;
+  /**
+   * Check if the price is negotiable
+   */
+  priceNegotiable?: boolean | null;
+  /**
+   * Payment frequency for rental properties
+   */
+  paymentTerms?: ('monthly' | 'quarterly' | 'annually') | null;
+  /**
+   * Security deposit amount in XAF
+   */
+  securityDeposit?: number | null;
   contactInfo: {
     phone: string;
     email?: string | null;
@@ -994,6 +1018,14 @@ export interface Property {
      * WhatsApp number for contact
      */
     whatsapp?: string | null;
+    /**
+     * Preferred method of contact
+     */
+    preferredContactMethod: 'phone' | 'email' | 'whatsapp';
+    /**
+     * Best times to contact (e.g., 9 AM - 6 PM)
+     */
+    contactHours?: string | null;
   };
   owner: string | User;
   /**
@@ -1977,12 +2009,20 @@ export interface PropertiesSelect<T extends boolean = true> {
         image?: T;
         description?: T;
       };
+  propertyCondition?: T;
+  availabilityDate?: T;
+  virtualTourUrl?: T;
+  priceNegotiable?: T;
+  paymentTerms?: T;
+  securityDeposit?: T;
   contactInfo?:
     | T
     | {
         phone?: T;
         email?: T;
         whatsapp?: T;
+        preferredContactMethod?: T;
+        contactHours?: T;
       };
   owner?: T;
   price?: T;

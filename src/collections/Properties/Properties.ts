@@ -382,6 +382,69 @@ export const Properties: CollectionConfig = {
           ],
         },
         {
+          label: 'Property Details',
+          fields: [
+            {
+              name: 'propertyCondition',
+              type: 'select',
+              required: true,
+              options: [
+                { label: 'New', value: 'new' },
+                { label: 'Good', value: 'good' },
+                { label: 'Fair', value: 'fair' },
+                { label: 'Needs Renovation', value: 'needs_renovation' },
+              ],
+              admin: {
+                description: 'Current condition of the property',
+              },
+            },
+            {
+              name: 'availabilityDate',
+              type: 'date',
+              required: true,
+              admin: {
+                description: 'When the property becomes available',
+              },
+            },
+            {
+              name: 'virtualTourUrl',
+              type: 'text',
+              admin: {
+                description: 'Link to 360° tours or video walkthroughs',
+              },
+            },
+            {
+              name: 'priceNegotiable',
+              type: 'checkbox',
+              label: 'Price Negotiable',
+              admin: {
+                description: 'Check if the price is negotiable',
+              },
+            },
+            {
+              name: 'paymentTerms',
+              type: 'select',
+              admin: {
+                condition: (data) => data.listingType === 'rent',
+                description: 'Payment frequency for rental properties',
+              },
+              options: [
+                { label: 'Monthly', value: 'monthly' },
+                { label: 'Quarterly', value: 'quarterly' },
+                { label: 'Annually', value: 'annually' },
+              ],
+            },
+            {
+              name: 'securityDeposit',
+              type: 'number',
+              admin: {
+                condition: (data) => data.listingType === 'rent',
+                description: 'Security deposit amount in XAF',
+              },
+            },
+          ],
+        },
+        {
           label: 'Contact Information',
           fields: [
             {
@@ -402,6 +465,26 @@ export const Properties: CollectionConfig = {
                   type: 'text',
                   admin: {
                     description: 'WhatsApp number for contact',
+                  },
+                },
+                {
+                  name: 'preferredContactMethod',
+                  type: 'select',
+                  required: true,
+                  options: [
+                    { label: 'Phone', value: 'phone' },
+                    { label: 'Email', value: 'email' },
+                    { label: 'WhatsApp', value: 'whatsapp' },
+                  ],
+                  admin: {
+                    description: 'Preferred method of contact',
+                  },
+                },
+                {
+                  name: 'contactHours',
+                  type: 'text',
+                  admin: {
+                    description: 'Best times to contact (e.g., 9 AM - 6 PM)',
                   },
                 },
               ],
