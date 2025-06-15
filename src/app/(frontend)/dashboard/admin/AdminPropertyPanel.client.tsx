@@ -64,9 +64,12 @@ export const AdminPropertyPanel: React.FC<AdminPropertyPanelProps> = ({ user }) 
 
   const fetchRecentProperties = async () => {
     try {
-      const response = await fetch('/api/properties?limit=5&sort=-createdAt&where[status][equals]=pending', {
-        credentials: 'include',
-      })
+      const response = await fetch(
+        '/api/properties?limit=5&sort=-createdAt&where[status][equals]=pending',
+        {
+          credentials: 'include',
+        },
+      )
 
       if (!response.ok) {
         throw new Error('Failed to fetch recent properties')
@@ -187,18 +190,28 @@ export const AdminPropertyPanel: React.FC<AdminPropertyPanelProps> = ({ user }) 
                   <p className="text-sm font-medium text-muted-foreground">{card.title}</p>
                   <p className="text-2xl font-bold text-card-foreground">{card.count}</p>
                 </div>
-                <div className={`p-2 rounded-lg ${
-                  card.color === 'warning' ? 'bg-warning/20' :
-                  card.color === 'success' ? 'bg-success/20' :
-                  card.color === 'error' ? 'bg-error/20' :
-                  'bg-muted/20'
-                }`}>
-                  <Icon className={`w-5 h-5 ${
-                    card.color === 'warning' ? 'text-warning' :
-                    card.color === 'success' ? 'text-success' :
-                    card.color === 'error' ? 'text-error' :
-                    'text-muted-foreground'
-                  }`} />
+                <div
+                  className={`p-2 rounded-lg ${
+                    card.color === 'warning'
+                      ? 'bg-warning/20'
+                      : card.color === 'success'
+                        ? 'bg-success/20'
+                        : card.color === 'error'
+                          ? 'bg-error/20'
+                          : 'bg-muted/20'
+                  }`}
+                >
+                  <Icon
+                    className={`w-5 h-5 ${
+                      card.color === 'warning'
+                        ? 'text-warning'
+                        : card.color === 'success'
+                          ? 'text-success'
+                          : card.color === 'error'
+                            ? 'text-error'
+                            : 'text-muted-foreground'
+                    }`}
+                  />
                 </div>
               </div>
             </Link>
@@ -209,7 +222,9 @@ export const AdminPropertyPanel: React.FC<AdminPropertyPanelProps> = ({ user }) 
       {/* Recent Pending Properties */}
       {stats.pending > 0 && (
         <div>
-          <h3 className="text-lg font-semibold text-card-foreground mb-4">Recent Pending Properties</h3>
+          <h3 className="text-lg font-semibold text-card-foreground mb-4">
+            Recent Pending Properties
+          </h3>
           <div className="space-y-3">
             {recentProperties.slice(0, 3).map((property) => (
               <div
@@ -219,15 +234,20 @@ export const AdminPropertyPanel: React.FC<AdminPropertyPanelProps> = ({ user }) 
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center mb-2">
-                      <h4 className="font-semibold text-card-foreground mr-2">{property.title}</h4>
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning/20 text-warning-foreground">
+                      <Link href={`/dashboard/admin/properties/${property.id}`} className="block">
+                        <h4 className="font-semibold text-card-foreground mr-2">
+                          {property.title}
+                        </h4>
+                      </Link>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning text-warning-foreground">
                         Pending Review
                       </span>
                     </div>
                     <p className="text-sm text-muted-foreground mb-1">
-                      {property.propertyType.charAt(0).toUpperCase() + property.propertyType.slice(1)} • 
-                      {property.listingType === 'sale' ? 'For Sale' : 'For Rent'} • 
-                      {property.area} m²
+                      {property.propertyType.charAt(0).toUpperCase() +
+                        property.propertyType.slice(1)}{' '}
+                      •{property.listingType === 'sale' ? 'For Sale' : 'For Rent'} •{property.area}{' '}
+                      m²
                     </p>
                     <p className="text-xs text-muted-foreground/70">
                       Submitted {new Date(property.createdAt).toLocaleDateString()}
@@ -261,9 +281,7 @@ export const AdminPropertyPanel: React.FC<AdminPropertyPanelProps> = ({ user }) 
         <div className="text-center py-8">
           <CheckCircle className="w-12 h-12 text-success mx-auto mb-4" />
           <p className="text-muted-foreground font-medium">No pending properties</p>
-          <p className="text-sm text-muted-foreground/70 mt-1">
-            All properties have been reviewed
-          </p>
+          <p className="text-sm text-muted-foreground/70 mt-1">All properties have been reviewed</p>
         </div>
       )}
     </div>

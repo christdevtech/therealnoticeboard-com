@@ -4,24 +4,24 @@ import React, { useState } from 'react'
 import { Property, Media, User, Neighborhood, Amenity } from '@/payload-types'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { 
-  ArrowLeft, 
-  Check, 
-  X, 
-  Clock, 
-  Home, 
-  Building, 
-  MapPin, 
-  Calendar, 
-  DollarSign, 
-  Ruler, 
-  Phone, 
-  Mail, 
+import {
+  ArrowLeft,
+  Check,
+  X,
+  Clock,
+  Home,
+  Building,
+  MapPin,
+  Calendar,
+  DollarSign,
+  Ruler,
+  Phone,
+  Mail,
   MessageCircle,
   User as UserIcon,
   FileText,
   Image as ImageIcon,
-  Star
+  Star,
 } from 'lucide-react'
 import Image from 'next/image'
 
@@ -42,10 +42,11 @@ export const AdminPropertyDetail: React.FC<AdminPropertyDetailProps> = ({ proper
   const [featured, setFeatured] = useState(property.featured || false)
   const [activeImageIndex, setActiveImageIndex] = useState(0)
 
-  const owner = typeof property.owner === 'object' ? property.owner as User : null
-  const neighborhood = typeof property.neighborhood === 'object' ? property.neighborhood as Neighborhood : null
-  const images = property.images as Media[] || []
-  const amenities = property.amenities as Amenity[] || []
+  const owner = typeof property.owner === 'object' ? (property.owner as User) : null
+  const neighborhood =
+    typeof property.neighborhood === 'object' ? (property.neighborhood as Neighborhood) : null
+  const images = (property.images as Media[]) || []
+  const amenities = (property.amenities as Amenity[]) || []
 
   const updatePropertyStatus = async (status: PropertyUpdateData['status'], notes?: string) => {
     setUpdating(true)
@@ -56,7 +57,7 @@ export const AdminPropertyDetail: React.FC<AdminPropertyDetailProps> = ({ proper
         featured,
       }
 
-      const response = await fetch(`/api/properties/${property.id}`, {
+      const response = await fetch(`/api/admin/properties/${property.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -71,10 +72,9 @@ export const AdminPropertyDetail: React.FC<AdminPropertyDetailProps> = ({ proper
 
       // Send email notification
       await sendStatusChangeNotification(property.id, status)
-      
+
       // Redirect back to properties list
       router.push('/dashboard/admin/properties')
-      
     } catch (error) {
       console.error('Error updating property:', error)
       alert('Failed to update property status')
@@ -103,16 +103,24 @@ export const AdminPropertyDetail: React.FC<AdminPropertyDetailProps> = ({ proper
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      pending: { color: 'bg-warning/20 text-warning-foreground border-warning/30', label: 'Pending Review' },
-      approved: { color: 'bg-success/20 text-success-foreground border-success/30', label: 'Approved' },
-      rejected: { color: 'bg-error/20 text-error-foreground border-error/30', label: 'Rejected' },
-      sold: { color: 'bg-muted/20 text-muted-foreground border-muted/30', label: 'Sold/Rented' },
+      pending: {
+        color: 'bg-warning text-warning-foreground border-warning/30',
+        label: 'Pending Review',
+      },
+      approved: {
+        color: 'bg-success text-success-foreground border-success/30',
+        label: 'Approved',
+      },
+      rejected: { color: 'bg-error text-error-foreground border-error/30', label: 'Rejected' },
+      sold: { color: 'bg-muted text-muted-foreground border-muted/30', label: 'Sold/Rented' },
     }
-    
+
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.pending
-    
+
     return (
-      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${config.color}`}>
+      <span
+        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${config.color}`}
+      >
         {config.label}
       </span>
     )
@@ -211,16 +219,20 @@ export const AdminPropertyDetail: React.FC<AdminPropertyDetailProps> = ({ proper
               <Building className="w-5 h-5" />
               Property Details
             </h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Property Type</label>
-                  <p className="text-card-foreground">{getPropertyTypeLabel(property.propertyType)}</p>
+                  <p className="text-card-foreground">
+                    {getPropertyTypeLabel(property.propertyType)}
+                  </p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Listing Type</label>
-                  <p className="text-card-foreground">{property.listingType === 'sale' ? 'For Sale' : 'For Rent'}</p>
+                  <p className="text-card-foreground">
+                    {property.listingType === 'sale' ? 'For Sale' : 'For Rent'}
+                  </p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Area</label>
@@ -228,10 +240,12 @@ export const AdminPropertyDetail: React.FC<AdminPropertyDetailProps> = ({ proper
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Price</label>
-                  <p className="text-card-foreground font-semibold text-lg">{formatPrice(property.price)}</p>
+                  <p className="text-card-foreground font-semibold text-lg">
+                    {formatPrice(property.price)}
+                  </p>
                 </div>
               </div>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Neighborhood</label>
@@ -239,16 +253,24 @@ export const AdminPropertyDetail: React.FC<AdminPropertyDetailProps> = ({ proper
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Condition</label>
-                  <p className="text-card-foreground capitalize">{property.propertyCondition?.replace('_', ' ')}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">Available Date</label>
-                  <p className="text-card-foreground">
-                    {property.availabilityDate ? new Date(property.availabilityDate).toLocaleDateString() : 'Not specified'}
+                  <p className="text-card-foreground capitalize">
+                    {property.propertyCondition?.replace('_', ' ')}
                   </p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Price Negotiable</label>
+                  <label className="text-sm font-medium text-muted-foreground">
+                    Available Date
+                  </label>
+                  <p className="text-card-foreground">
+                    {property.availabilityDate
+                      ? new Date(property.availabilityDate).toLocaleDateString()
+                      : 'Not specified'}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">
+                    Price Negotiable
+                  </label>
                   <p className="text-card-foreground">{property.priceNegotiable ? 'Yes' : 'No'}</p>
                 </div>
               </div>
@@ -257,30 +279,42 @@ export const AdminPropertyDetail: React.FC<AdminPropertyDetailProps> = ({ proper
             {/* Property-specific features */}
             {property.propertyType === 'residential' && property.residentialFeatures && (
               <div className="mt-6 pt-6 border-t border-border">
-                <h3 className="text-lg font-semibold text-card-foreground mb-3">Residential Features</h3>
+                <h3 className="text-lg font-semibold text-card-foreground mb-3">
+                  Residential Features
+                </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {getFeatureValue(property.residentialFeatures, 'bedrooms') && (
                     <div>
                       <label className="text-sm font-medium text-muted-foreground">Bedrooms</label>
-                      <p className="text-card-foreground">{getFeatureValue(property.residentialFeatures, 'bedrooms')}</p>
+                      <p className="text-card-foreground">
+                        {getFeatureValue(property.residentialFeatures, 'bedrooms')}
+                      </p>
                     </div>
                   )}
                   {getFeatureValue(property.residentialFeatures, 'bathrooms') && (
                     <div>
                       <label className="text-sm font-medium text-muted-foreground">Bathrooms</label>
-                      <p className="text-card-foreground">{getFeatureValue(property.residentialFeatures, 'bathrooms')}</p>
+                      <p className="text-card-foreground">
+                        {getFeatureValue(property.residentialFeatures, 'bathrooms')}
+                      </p>
                     </div>
                   )}
                   {getFeatureValue(property.residentialFeatures, 'floors') && (
                     <div>
                       <label className="text-sm font-medium text-muted-foreground">Floors</label>
-                      <p className="text-card-foreground">{getFeatureValue(property.residentialFeatures, 'floors')}</p>
+                      <p className="text-card-foreground">
+                        {getFeatureValue(property.residentialFeatures, 'floors')}
+                      </p>
                     </div>
                   )}
                   {getFeatureValue(property.residentialFeatures, 'yearBuilt') && (
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground">Year Built</label>
-                      <p className="text-card-foreground">{getFeatureValue(property.residentialFeatures, 'yearBuilt')}</p>
+                      <label className="text-sm font-medium text-muted-foreground">
+                        Year Built
+                      </label>
+                      <p className="text-card-foreground">
+                        {getFeatureValue(property.residentialFeatures, 'yearBuilt')}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -340,12 +374,16 @@ export const AdminPropertyDetail: React.FC<AdminPropertyDetailProps> = ({ proper
                   <p className="text-card-foreground">{owner.email}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Verification Status</label>
+                  <label className="text-sm font-medium text-muted-foreground">
+                    Verification Status
+                  </label>
                   <p className="text-card-foreground capitalize">{owner.verificationStatus}</p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Member Since</label>
-                  <p className="text-card-foreground">{new Date(owner.createdAt).toLocaleDateString()}</p>
+                  <p className="text-card-foreground">
+                    {new Date(owner.createdAt).toLocaleDateString()}
+                  </p>
                 </div>
               </div>
             </div>
@@ -354,7 +392,9 @@ export const AdminPropertyDetail: React.FC<AdminPropertyDetailProps> = ({ proper
           {/* Contact Information */}
           {property.contactInfo && (
             <div className="bg-card rounded-lg shadow-theme border border-card p-6">
-              <h2 className="text-xl font-semibold text-card-foreground mb-4">Contact Information</h2>
+              <h2 className="text-xl font-semibold text-card-foreground mb-4">
+                Contact Information
+              </h2>
               <div className="space-y-3">
                 {property.contactInfo.phone && (
                   <div className="flex items-center gap-2">
@@ -376,8 +416,12 @@ export const AdminPropertyDetail: React.FC<AdminPropertyDetailProps> = ({ proper
                 )}
                 {property.contactInfo.preferredContactMethod && (
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Preferred Contact</label>
-                    <p className="text-card-foreground capitalize">{property.contactInfo.preferredContactMethod}</p>
+                    <label className="text-sm font-medium text-muted-foreground">
+                      Preferred Contact
+                    </label>
+                    <p className="text-card-foreground capitalize">
+                      {property.contactInfo.preferredContactMethod}
+                    </p>
                   </div>
                 )}
               </div>
@@ -387,7 +431,7 @@ export const AdminPropertyDetail: React.FC<AdminPropertyDetailProps> = ({ proper
           {/* Admin Actions */}
           <div className="bg-card rounded-lg shadow-theme border border-card p-6">
             <h2 className="text-xl font-semibold text-card-foreground mb-4">Admin Actions</h2>
-            
+
             {/* Featured Toggle */}
             <div className="mb-4">
               <label className="flex items-center gap-2">
@@ -489,11 +533,15 @@ export const AdminPropertyDetail: React.FC<AdminPropertyDetailProps> = ({ proper
             <div className="space-y-3 text-sm">
               <div>
                 <label className="font-medium text-muted-foreground">Created</label>
-                <p className="text-card-foreground">{new Date(property.createdAt).toLocaleString()}</p>
+                <p className="text-card-foreground">
+                  {new Date(property.createdAt).toLocaleString()}
+                </p>
               </div>
               <div>
                 <label className="font-medium text-muted-foreground">Last Updated</label>
-                <p className="text-card-foreground">{new Date(property.updatedAt).toLocaleString()}</p>
+                <p className="text-card-foreground">
+                  {new Date(property.updatedAt).toLocaleString()}
+                </p>
               </div>
               <div>
                 <label className="font-medium text-muted-foreground">Slug</label>

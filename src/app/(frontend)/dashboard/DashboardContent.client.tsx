@@ -135,10 +135,10 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({ user }) => {
                 <h3
                   className={`font-semibold mb-2 ${
                     isVerificationPending
-                      ? 'text-warning-foreground'
+                      ? 'text-warning'
                       : isVerificationRejected
-                        ? 'text-error-foreground'
-                        : 'text-primary-foreground'
+                        ? 'text-error'
+                        : 'text-primary'
                   }`}
                 >
                   {isVerificationPending

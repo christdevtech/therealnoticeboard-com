@@ -22,6 +22,7 @@ export const Users: CollectionConfig = {
   admin: {
     defaultColumns: ['name', 'email', 'role', 'verificationStatus'],
     useAsTitle: 'name',
+    group: 'User Management',
   },
   auth: {
     verify: {

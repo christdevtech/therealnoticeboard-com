@@ -4,19 +4,8 @@ import React, { useState, useEffect } from 'react'
 import { Property, Neighborhood } from '@/payload-types'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { 
-  Search, 
-  Filter, 
-  Eye, 
-  Check, 
-  X, 
-  Clock, 
-  Home,
-  Building,
-  MapPin,
-  Calendar,
-  DollarSign
-} from 'lucide-react'
+import { useDebounce } from '@/utilities/useDebounce'
+import { Search, Eye, Check, X, Clock, Home, Building, MapPin, Calendar, Coins } from 'lucide-react'
 
 interface AdminPropertiesListProps {
   properties: Property[]
@@ -49,8 +38,23 @@ export const AdminPropertiesList: React.FC<AdminPropertiesListProps> = ({
   const searchParams = useSearchParams()
   const [properties, setProperties] = useState(initialProperties)
   const [filters, setFilters] = useState(initialFilters)
+  const [searchInput, setSearchInput] = useState(initialFilters.search)
+  const [currentPageState, setCurrentPageState] = useState(currentPage)
+  const [totalPagesState, setTotalPagesState] = useState(totalPages)
+  const [totalDocsState, setTotalDocsState] = useState(totalDocs)
   const [loading, setLoading] = useState(false)
   const [updatingProperty, setUpdatingProperty] = useState<string | null>(null)
+
+  const debouncedSearch = useDebounce(searchInput, 500)
+
+  // Handle debounced search
+  useEffect(() => {
+    if (debouncedSearch !== filters.search) {
+      const updatedFilters = { ...filters, search: debouncedSearch }
+      setFilters(updatedFilters)
+      fetchProperties(updatedFilters, 1)
+    }
+  }, [debouncedSearch])
 
   const statusOptions = [
     { value: 'all', label: 'All Status', icon: Building },
@@ -74,26 +78,67 @@ export const AdminPropertiesList: React.FC<AdminPropertiesListProps> = ({
     { value: 'rent', label: 'For Rent' },
   ]
 
+  const fetchProperties = async (newFilters: typeof filters, page: number = 1) => {
+    setLoading(true)
+    try {
+      const params = new URLSearchParams()
+      Object.entries(newFilters).forEach(([key, value]) => {
+        if (value && value !== 'all' && value !== '') {
+          params.set(key, value)
+        }
+      })
+      params.set('page', page.toString())
+      params.set('limit', '20')
+
+      const response = await fetch(`/api/admin/properties?${params.toString()}`, {
+        credentials: 'include',
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch properties')
+      }
+
+      const data = await response.json()
+      setProperties(data.properties)
+      setCurrentPageState(data.pagination.page)
+      setTotalPagesState(data.pagination.totalPages)
+      setTotalDocsState(data.pagination.totalDocs)
+
+      // Update URL without page refresh
+      const urlParams = new URLSearchParams()
+      Object.entries(newFilters).forEach(([key, value]) => {
+        if (value && value !== 'all' && value !== '') {
+          urlParams.set(key, value)
+        }
+      })
+      if (page > 1) {
+        urlParams.set('page', page.toString())
+      }
+
+      const newUrl = `/dashboard/admin/properties${urlParams.toString() ? '?' + urlParams.toString() : ''}`
+      window.history.replaceState({}, '', newUrl)
+    } catch (error) {
+      console.error('Error fetching properties:', error)
+      alert('Failed to fetch properties')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const updateFilters = (newFilters: Partial<typeof filters>) => {
     const updatedFilters = { ...filters, ...newFilters }
     setFilters(updatedFilters)
+    fetchProperties(updatedFilters, 1)
+  }
 
-    // Update URL
-    const params = new URLSearchParams()
-    Object.entries(updatedFilters).forEach(([key, value]) => {
-      if (value && value !== 'all' && value !== '') {
-        params.set(key, value)
-      }
-    })
-    params.set('page', '1') // Reset to first page when filtering
-
-    router.push(`/dashboard/admin/properties?${params.toString()}`)
+  const handlePageChange = (page: number) => {
+    fetchProperties(filters, page)
   }
 
   const updatePropertyStatus = async (propertyId: string, updateData: PropertyUpdateData) => {
     setUpdatingProperty(propertyId)
     try {
-      const response = await fetch(`/api/properties/${propertyId}`, {
+      const response = await fetch(`/api/admin/properties/${propertyId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -107,15 +152,14 @@ export const AdminPropertiesList: React.FC<AdminPropertiesListProps> = ({
       }
 
       const updatedProperty = await response.json()
-      
+
       // Update local state
-      setProperties(prev => 
-        prev.map(p => p.id === propertyId ? { ...p, ...updatedProperty } : p)
+      setProperties((prev) =>
+        prev.map((p) => (p.id === propertyId ? { ...p, ...updatedProperty } : p)),
       )
 
       // Send email notification
       await sendStatusChangeNotification(propertyId, updateData.status)
-      
     } catch (error) {
       console.error('Error updating property:', error)
       alert('Failed to update property status')
@@ -145,16 +189,18 @@ export const AdminPropertiesList: React.FC<AdminPropertiesListProps> = ({
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      pending: { color: 'bg-warning/20 text-warning-foreground', label: 'Pending Review' },
-      approved: { color: 'bg-success/20 text-success-foreground', label: 'Approved' },
-      rejected: { color: 'bg-error/20 text-error-foreground', label: 'Rejected' },
-      sold: { color: 'bg-muted/20 text-muted-foreground', label: 'Sold/Rented' },
+      pending: { color: 'bg-warning text-warning-foreground', label: 'Pending Review' },
+      approved: { color: 'bg-success text-success-foreground', label: 'Approved' },
+      rejected: { color: 'bg-error text-error-foreground', label: 'Rejected' },
+      sold: { color: 'bg-muted text-muted-foreground', label: 'Sold/Rented' },
     }
-    
+
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.pending
-    
+
     return (
-      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.color}`}>
+      <span
+        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.color}`}
+      >
         {config.label}
       </span>
     )
@@ -189,8 +235,8 @@ export const AdminPropertiesList: React.FC<AdminPropertiesListProps> = ({
             <input
               type="text"
               placeholder="Search properties..."
-              value={filters.search}
-              onChange={(e) => updateFilters({ search: e.target.value })}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             />
           </div>
@@ -258,17 +304,25 @@ export const AdminPropertiesList: React.FC<AdminPropertiesListProps> = ({
         ) : (
           properties.map((property) => {
             const owner = typeof property.owner === 'object' ? property.owner : null
-            const neighborhood = typeof property.neighborhood === 'object' ? property.neighborhood : null
-            
+            const neighborhood =
+              typeof property.neighborhood === 'object' ? property.neighborhood : null
+
             return (
-              <div key={property.id} className="bg-card rounded-lg shadow-theme border border-card p-6">
+              <div
+                key={property.id}
+                className="bg-card rounded-lg shadow-theme border border-card p-6"
+              >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-xl font-semibold text-card-foreground">{property.title}</h3>
+                      <Link href={`/dashboard/admin/properties/${property.id}`}>
+                        <h3 className="text-xl font-semibold text-card-foreground">
+                          {property.title}
+                        </h3>
+                      </Link>
                       {getStatusBadge(property.status)}
                     </div>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-muted-foreground mb-4">
                       <div className="flex items-center gap-2">
                         <Building className="w-4 h-4" />
@@ -290,7 +344,7 @@ export const AdminPropertiesList: React.FC<AdminPropertiesListProps> = ({
 
                     <div className="flex items-center gap-4 text-sm">
                       <div className="flex items-center gap-2">
-                        <DollarSign className="w-4 h-4 text-muted-foreground" />
+                        <Coins className="w-4 h-4 text-muted-foreground" />
                         <span className="font-semibold">{formatPrice(property.price)}</span>
                       </div>
                       <div>
@@ -369,28 +423,30 @@ export const AdminPropertiesList: React.FC<AdminPropertiesListProps> = ({
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && (
+      {totalPagesState > 1 && (
         <div className="flex items-center justify-center gap-2">
-          {currentPage > 1 && (
-            <Link
-              href={`/dashboard/admin/properties?${new URLSearchParams({ ...filters, page: (currentPage - 1).toString() }).toString()}`}
-              className="px-3 py-2 border border-border rounded-md hover:bg-accent transition-colors"
+          {currentPageState > 1 && (
+            <button
+              onClick={() => handlePageChange(currentPageState - 1)}
+              disabled={loading}
+              className="px-3 py-2 border border-border rounded-md hover:bg-accent transition-colors disabled:opacity-50"
             >
               Previous
-            </Link>
+            </button>
           )}
-          
+
           <span className="px-3 py-2 text-sm text-muted-foreground">
-            Page {currentPage} of {totalPages}
+            Page {currentPageState} of {totalPagesState} ({totalDocsState} total)
           </span>
-          
-          {currentPage < totalPages && (
-            <Link
-              href={`/dashboard/admin/properties?${new URLSearchParams({ ...filters, page: (currentPage + 1).toString() }).toString()}`}
-              className="px-3 py-2 border border-border rounded-md hover:bg-accent transition-colors"
+
+          {currentPageState < totalPagesState && (
+            <button
+              onClick={() => handlePageChange(currentPageState + 1)}
+              disabled={loading}
+              className="px-3 py-2 border border-border rounded-md hover:bg-accent transition-colors disabled:opacity-50"
             >
               Next
-            </Link>
+            </button>
           )}
         </div>
       )}
