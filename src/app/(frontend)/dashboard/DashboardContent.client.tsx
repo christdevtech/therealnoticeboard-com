@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 import { User } from '@/payload-types'
 import Link from 'next/link'
 import { AdminVerificationPanel } from './admin/AdminVerificationPanel.client'
+import { AdminPropertyPanel } from './admin/AdminPropertyPanel.client'
+// import { AdminPropertyPanel } from './admin/properties/AdminPropertyPanel.client'
 // import { AdminVerificationPanel } from './AdminVerificationPanel.client'
 
 interface DashboardContentProps {
@@ -178,8 +180,9 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({ user }) => {
         )}
         {/* Admin Verification Panel */}
         {user.role === 'admin' && (
-          <div className="mb-8">
+          <div className="mb-8 space-y-6">
             <AdminVerificationPanel user={user} />
+            <AdminPropertyPanel user={user} />
           </div>
         )}
         {/* Stats Section */}

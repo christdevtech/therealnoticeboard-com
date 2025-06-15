@@ -396,7 +396,10 @@ export default async function Property({ params: paramsPromise }: Args) {
                             key={index}
                             className="flex items-center gap-3 p-3 bg-secondary rounded-lg"
                           >
-                            {getAmenityIcon(amenity.name)}
+                            {/* {getAmenityIcon(amenity.name)} */}
+                            {amenity.icon && (
+                              <Media resource={amenity.icon} className="w-8 h-8 text-success" />
+                            )}
                             <span className="font-medium text-foreground">{amenity.name}</span>
                           </div>
                         )
@@ -407,7 +410,7 @@ export default async function Property({ params: paramsPromise }: Args) {
                 </div>
               )}
 
-              {/* Property Images Gallery */}
+              {/* Property Images Gallery
               {property.images && property.images.length > 1 && (
                 <div className="bg-card rounded-lg p-6 shadow-theme-sm border border-card">
                   <h2 className="text-2xl font-bold mb-6 text-foreground">Photo Gallery</h2>
@@ -417,9 +420,9 @@ export default async function Property({ params: paramsPromise }: Args) {
                         return (
                           <div
                             key={index}
-                            className="aspect-[4/3] rounded-lg overflow-hidden hover:shadow-theme-md transition-shadow"
+                            className="relative aspect-[4/3] rounded-lg overflow-hidden hover:shadow-theme-md transition-shadow"
                           >
-                            <Media resource={image} className="w-full h-full object-cover" />
+                            <Media resource={image} fill className="w-full h-full object-cover" />
                           </div>
                         )
                       }
@@ -427,7 +430,7 @@ export default async function Property({ params: paramsPromise }: Args) {
                     })}
                   </div>
                 </div>
-              )}
+              )} */}
             </div>
 
             {/* Sidebar */}

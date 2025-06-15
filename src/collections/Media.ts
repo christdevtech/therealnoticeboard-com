@@ -61,7 +61,7 @@ export const Media: CollectionConfig = {
     {
       name: 'isPublic',
       type: 'checkbox',
-      defaultValue: false,
+      defaultValue: true,
       admin: {
         position: 'sidebar',
         description: 'Make this media publicly accessible',

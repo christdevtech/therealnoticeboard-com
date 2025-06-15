@@ -60,7 +60,7 @@ export const PropertyHero: React.FC<{
   const metaImage = meta?.image && typeof meta.image === 'object' ? meta.image : null
   const displayImage = metaImage || firstImage
   const allImages =
-    images && Array.isArray(images) ? images.filter((img) => typeof img !== 'string') : []
+    images && images.length > 0 ? images.filter((image) => typeof image === 'object') : []
 
   // Format price with XAF currency
   const formatPrice = (price: number) => {
@@ -602,18 +602,19 @@ export const PropertyHero: React.FC<{
               {typeof allImages[currentImageIndex] !== 'string' && (
                 <div
                   className={cn(
-                    'transition-transform duration-300 ease-out',
+                    'relative transition-transform duration-300 ease-out',
                     isZoomed ? 'origin-center' : 'origin-center',
+                    // Set proper dimensions for the image container
+                    isZoomed ? 'w-[200%] h-[200%]' : 'w-full h-full max-w-[90vw] max-h-[90vh]'
                   )}
                   style={{
                     transform: isZoomed
                       ? `scale(${zoomLevel}) translate(${position.x / zoomLevel}px, ${position.y / zoomLevel}px)`
                       : 'scale(1)',
-                    maxWidth: isZoomed ? 'none' : '100%',
-                    maxHeight: isZoomed ? 'none' : '100%',
                   }}
                 >
                   <Media
+                    fill
                     resource={allImages[currentImageIndex]}
                     className={cn(
                       'object-contain',
