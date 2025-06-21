@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url'
 
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
-import { mediaRead, mediaDelete, mediaUpdate } from '../access/media'
+import { mediaDelete, mediaUpdate } from '../access/media'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)

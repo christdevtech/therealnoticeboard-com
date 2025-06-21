@@ -83,7 +83,7 @@ export function LoginForm() {
       const error = new Error(errorData.message || 'Request failed')
       ;(error as any).response = response
       ;(error as any).data = errorData
-      console.log('Checking if I can see this in any console or terminal', errorData)
+      // console.log('Checking if I can see this in any console or terminal', errorData)
       throw error
     } catch (error: any) {
       // Handle all errors here
@@ -190,7 +190,9 @@ export function LoginForm() {
             <p className="text-destructive text-sm">{errors.general}</p>
             {showResendOption && (
               <div className="mt-3 pt-3 border-t border-destructive/20">
-                <p className="text-sm text-muted-foreground mb-2">Didn't receive the verification email?</p>
+                <p className="text-sm text-muted-foreground mb-2">
+                  Didn&rsquo;t receive the verification email?
+                </p>
                 <button
                   type="button"
                   onClick={handleResendVerification}
@@ -348,7 +350,7 @@ export function LoginForm() {
 
       <div className="px-8 py-4 bg-muted border-t border-border">
         <p className="text-center text-sm text-muted-foreground">
-          Don't have an account?{' '}
+          Don&rsquo;t have an account?{' '}
           <Link href="/signup" className="text-primary hover:text-primary/80 font-medium">
             Sign up
           </Link>

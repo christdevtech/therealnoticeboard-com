@@ -6,22 +6,19 @@ import { Property } from '@/payload-types'
 export async function GET(request: NextRequest) {
   try {
     const payload = await getPayload({ config: configPromise })
-    
+
     // Authenticate the request
     const { user } = await payload.auth({ headers: request.headers })
-    
+
     if (!user || user.role !== 'admin') {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '10')
     const status = searchParams.get('status')
-    const search = searchParams.get('search')
+    const owner = searchParams.get('owner')
     const propertyType = searchParams.get('propertyType')
     const listingType = searchParams.get('listingType')
     const sortBy = searchParams.get('sortBy') || 'createdAt'
@@ -42,29 +39,8 @@ export async function GET(request: NextRequest) {
       where.listingType = { equals: listingType }
     }
 
-    if (search) {
-      where.or = [
-        {
-          title: {
-            contains: search,
-          },
-        },
-        {
-          description: {
-            contains: search,
-          },
-        },
-        {
-          'location.neighborhood': {
-            contains: search,
-          },
-        },
-        {
-          'location.address': {
-            contains: search,
-          },
-        },
-      ]
+    if (owner) {
+      where.owner = { equals: owner }
     }
 
     // Fetch properties with pagination
@@ -122,24 +98,24 @@ export async function GET(request: NextRequest) {
         overview,
         filters: {
           status,
-          search,
+          owner,
           propertyType,
           listingType,
           sortBy,
           sortOrder,
         },
       },
-      { status: 200 }
+      { status: 200 },
     )
   } catch (error) {
     console.error('Admin properties fetch error:', error)
-    
+
     return NextResponse.json(
-      { 
+      {
         error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }
@@ -147,37 +123,31 @@ export async function GET(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   try {
     const payload = await getPayload({ config: configPromise })
-    
+
     // Authenticate the request
     const { user } = await payload.auth({ headers: request.headers })
-    
+
     if (!user || user.role !== 'admin') {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const { propertyId, status, adminNotes, featured } = await request.json()
 
     if (!propertyId) {
-      return NextResponse.json(
-        { error: 'Property ID is required' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Property ID is required' }, { status: 400 })
     }
 
     // Prepare update data
     const updateData: any = {}
-    
+
     if (status !== undefined) {
       updateData.status = status
     }
-    
+
     if (adminNotes !== undefined) {
       updateData.adminNotes = adminNotes
     }
-    
+
     if (featured !== undefined) {
       updateData.featured = featured
     }
@@ -196,17 +166,17 @@ export async function PATCH(request: NextRequest) {
         property: updatedProperty,
         message: 'Property updated successfully',
       },
-      { status: 200 }
+      { status: 200 },
     )
   } catch (error) {
     console.error('Admin property update error:', error)
-    
+
     return NextResponse.json(
-      { 
+      {
         error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

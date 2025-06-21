@@ -57,11 +57,11 @@ export const VerificationRequestReview: React.FC<VerificationRequestReviewProps>
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
-        return 'bg-warning/20 text-warning-foreground border-warning'
+        return 'bg-warning text-warning-foreground border-warning'
       case 'approved':
-        return 'bg-success/20 text-success-foreground border-success'
+        return 'bg-success text-success-foreground border-success'
       case 'rejected':
-        return 'bg-error/20 text-error-foreground border-error'
+        return 'bg-error text-error-foreground border-error'
       default:
         return 'bg-muted text-muted-foreground border-border'
     }
@@ -134,27 +134,51 @@ export const VerificationRequestReview: React.FC<VerificationRequestReviewProps>
           <h2 className="text-lg font-semibold text-card-foreground mb-4">User Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-muted-foreground mb-1">Full Name</label>
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
+                Full Name
+              </label>
               <p className="text-sm text-card-foreground bg-muted p-3 rounded-md">
                 {verificationRequest.userName}
               </p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-muted-foreground mb-1">Email Address</label>
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
+                Email Address
+              </label>
               <p className="text-sm text-card-foreground bg-muted p-3 rounded-md">
                 {verificationRequest.userEmail}
               </p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-muted-foreground mb-1">Phone Number</label>
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
+                Phone Number
+              </label>
               <p className="text-sm text-card-foreground bg-muted p-3 rounded-md">
                 {verificationRequest.phone}
               </p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-muted-foreground mb-1">Address</label>
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
+                Address
+              </label>
               <p className="text-sm text-card-foreground bg-muted p-3 rounded-md">
                 {verificationRequest.address}
+              </p>
+            </div>
+            {/* <div>
+              <label className="block text-sm font-medium text-muted-foreground mb-1">Date of Birth</label>
+              <p className="text-sm text-card-foreground bg-muted p-3 rounded-md">
+                {verificationRequest.dateOfBirth}
+              </p>
+            </div> */}
+            <div>
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
+                Submitted At
+              </label>
+              <p className="text-sm text-card-foreground bg-muted p-3 rounded-md">
+                {verificationRequest.submittedAt
+                  ? new Date(verificationRequest.submittedAt).toLocaleString()
+                  : 'N/A'}
               </p>
             </div>
           </div>
@@ -162,7 +186,9 @@ export const VerificationRequestReview: React.FC<VerificationRequestReviewProps>
 
         {/* Documents */}
         <div className="bg-card rounded-lg shadow-theme border border-card p-6">
-          <h2 className="text-lg font-semibold text-card-foreground mb-4">Verification Documents</h2>
+          <h2 className="text-lg font-semibold text-card-foreground mb-4">
+            Verification Documents
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Identification Document */}
             <div>
@@ -194,7 +220,7 @@ export const VerificationRequestReview: React.FC<VerificationRequestReviewProps>
                       resource: verificationRequest.identificationDocument,
                     })
                   }
-                  className="mt-2 text-sm text-primary hover:text-primary-hover"
+                  className="mt-2 text-sm text-primary hover:text-primary/80"
                 >
                   View Full Size
                 </button>
@@ -203,8 +229,10 @@ export const VerificationRequestReview: React.FC<VerificationRequestReviewProps>
 
             {/* Selfie with ID */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Selfie with ID</label>
-              <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+              <label className="block text-sm font-medium text-muted-foreground mb-2">
+                Selfie with ID
+              </label>
+              <div className="border border-border rounded-lg p-4 bg-muted">
                 <div className="aspect-w-16 aspect-h-9 mb-3">
                   <Media
                     resource={verificationRequest.selfieWithId}
@@ -218,7 +246,7 @@ export const VerificationRequestReview: React.FC<VerificationRequestReviewProps>
                     }
                   />
                 </div>
-                <p className="text-xs text-gray-500">{`${verificationRequest.userName}'s Selfie with ID`}</p>
+                <p className="text-xs text-muted-foreground">{`${verificationRequest.userName}'s Selfie with ID`}</p>
                 <button
                   onClick={() =>
                     setShowImageModal({
@@ -226,7 +254,7 @@ export const VerificationRequestReview: React.FC<VerificationRequestReviewProps>
                       resource: verificationRequest.selfieWithId,
                     })
                   }
-                  className="mt-2 text-sm text-blue-600 hover:text-blue-800"
+                  className="mt-2 text-sm text-primary hover:text-primary-hover"
                 >
                   View Full Size
                 </button>
@@ -236,24 +264,24 @@ export const VerificationRequestReview: React.FC<VerificationRequestReviewProps>
         </div>
 
         {/* Admin Notes */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Admin Notes</h2>
+        <div className="bg-card rounded-lg shadow-theme border border-card p-6">
+          <h2 className="text-lg font-semibold text-card-foreground mb-4">Admin Notes</h2>
           <textarea
             value={adminNotes}
             onChange={(e) => setAdminNotes(e.target.value)}
             placeholder="Add notes about this verification request (optional)..."
             rows={4}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary bg-background text-foreground"
           />
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-muted-foreground mt-2">
             These notes will be saved with the request for future reference.
           </p>
         </div>
 
         {/* Action Buttons */}
         {verificationRequest.status === 'pending' && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Review Decision</h2>
+          <div className="bg-card rounded-lg shadow-theme border border-card p-6">
+            <h2 className="text-lg font-semibold text-card-foreground mb-4">Review Decision</h2>
             <div className="flex space-x-4">
               <button
                 onClick={() => handleStatusUpdate('approved')}
@@ -333,7 +361,7 @@ export const VerificationRequestReview: React.FC<VerificationRequestReviewProps>
                 Reject Request
               </button>
             </div>
-            <p className="text-sm text-gray-500 mt-3">
+            <p className="text-sm text-muted-foreground mt-3">
               The user will receive an email notification about your decision.
             </p>
           </div>

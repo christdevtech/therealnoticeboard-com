@@ -1,0 +1,28 @@
+
+# Ignore version control files
+.git
+.gitignore
+
+# Ignore Docker-specific files that don't need to be in the image
+.dockerignore
+Dockerfile
+
+# Ignore logs
+*.log
+logs
+
+# Ignore environment files for security
+# .env
+# .env.*
+
+
+# Ignore node_modules to avoid conflicts
+node_modules
+
+# Ignore build artifacts and caches
+.next
+dist
+out
+
+# media files
+public/media/

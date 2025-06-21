@@ -1,5 +1,6 @@
 'use client'
 
+import qs from 'qs'
 import React, { useState } from 'react'
 import { Property, Media, User, Neighborhood, Amenity } from '@/payload-types'
 import Link from 'next/link'
@@ -12,14 +13,10 @@ import {
   Home,
   Building,
   MapPin,
-  Calendar,
-  DollarSign,
-  Ruler,
   Phone,
   Mail,
   MessageCircle,
   User as UserIcon,
-  FileText,
   Image as ImageIcon,
   Star,
 } from 'lucide-react'
@@ -57,14 +54,28 @@ export const AdminPropertyDetail: React.FC<AdminPropertyDetailProps> = ({ proper
         featured,
       }
 
-      const response = await fetch(`/api/admin/properties/${property.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
+      const stringifiedQuery = qs.stringify(
+        {
+          where: {
+            id: {
+              equals: property.id,
+            },
+          },
         },
-        credentials: 'include',
-        body: JSON.stringify(updateData),
-      })
+        { addQueryPrefix: true },
+      )
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/properties/${stringifiedQuery}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify(updateData),
+        },
+      )
 
       if (!response.ok) {
         throw new Error('Failed to update property')

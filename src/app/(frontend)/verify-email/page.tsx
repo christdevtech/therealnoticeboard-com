@@ -1,6 +1,8 @@
 import { Metadata } from 'next'
 import { VerifyEmailForm } from './VerifyEmailForm.client'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Verify Email | The Real Notice Board',
   description: 'Verify your email address to activate your account.',

@@ -31,7 +31,6 @@ export const PropertyHero: React.FC<{
 }> = ({ property }) => {
   const {
     title,
-    description,
     propertyType,
     listingType,
     price,
@@ -56,9 +55,9 @@ export const PropertyHero: React.FC<{
   const imageContainerRef = useRef<HTMLDivElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
 
-  const firstImage = images && Array.isArray(images) && images.length > 0 ? images[0] : null
-  const metaImage = meta?.image && typeof meta.image === 'object' ? meta.image : null
-  const displayImage = metaImage || firstImage
+  // const firstImage = images && Array.isArray(images) && images.length > 0 ? images[0] : null
+  // const metaImage = meta?.image && typeof meta.image === 'object' ? meta.image : null
+  // const displayImage = metaImage || firstImage
   const allImages =
     images && images.length > 0 ? images.filter((image) => typeof image === 'object') : []
 
@@ -381,7 +380,7 @@ export const PropertyHero: React.FC<{
                         <ChevronLeft className="w-5 h-5" />
                       </button>
 
-                      <div className="bg-black/60 text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
+                      <div className="bg-card/90 text-card-foreground px-3 py-1 rounded-full text-sm font-medium">
                         {currentImageIndex + 1} / {allImages.length}
                       </div>
 
@@ -605,7 +604,7 @@ export const PropertyHero: React.FC<{
                     'relative transition-transform duration-300 ease-out',
                     isZoomed ? 'origin-center' : 'origin-center',
                     // Set proper dimensions for the image container
-                    isZoomed ? 'w-[200%] h-[200%]' : 'w-full h-full max-w-[90vw] max-h-[90vh]'
+                    isZoomed ? 'w-[200%] h-[200%]' : 'w-full h-full max-w-[90vw] max-h-[90vh]',
                   )}
                   style={{
                     transform: isZoomed

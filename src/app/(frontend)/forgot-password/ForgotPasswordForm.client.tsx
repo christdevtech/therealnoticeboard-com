@@ -108,7 +108,7 @@ export function ForgotPasswordForm() {
         </div>
         <h2 className="text-2xl font-bold text-foreground mb-2">Check Your Email</h2>
         <p className="text-muted-foreground mb-6">
-          We've sent a password reset link to <strong>{formData.email}</strong>. Please check your
+          We have sent a password reset link to <strong>{formData.email}</strong>. Please check your
           inbox and follow the instructions to reset your password.
         </p>
         <div className="space-y-3">
@@ -129,7 +129,7 @@ export function ForgotPasswordForm() {
           </button>
         </div>
         <p className="text-xs text-muted-foreground mt-4">
-          Didn't receive the email? Check your spam folder or try again in a few minutes.
+          Didn&rsquo;t receive the email? Check your spam folder or try again in a few minutes.
         </p>
       </div>
     )
@@ -163,7 +163,7 @@ export function ForgotPasswordForm() {
             />
             {errors.email && <p className="mt-1 text-sm text-destructive">{errors.email}</p>}
             <p className="mt-2 text-sm text-muted-foreground">
-              Enter the email address associated with your account and we'll send you a link to
+              Enter the email address associated with your account and we will send you a link to
               reset your password.
             </p>
           </div>

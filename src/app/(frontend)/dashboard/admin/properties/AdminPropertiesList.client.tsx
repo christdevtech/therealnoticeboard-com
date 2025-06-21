@@ -1,11 +1,22 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { Property, Neighborhood } from '@/payload-types'
+import React, { useState } from 'react'
+import { Property, Neighborhood, User } from '@/payload-types'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useDebounce } from '@/utilities/useDebounce'
-import { Search, Eye, Check, X, Clock, Home, Building, MapPin, Calendar, Coins } from 'lucide-react'
+// import { useRouter, useSearchParams } from 'next/navigation'
+import {
+  UserIcon,
+  Eye,
+  Check,
+  X,
+  Clock,
+  Home,
+  Building,
+  MapPin,
+  Calendar,
+  Coins,
+} from 'lucide-react'
+import qs from 'qs'
 
 interface AdminPropertiesListProps {
   properties: Property[]
@@ -13,9 +24,10 @@ interface AdminPropertiesListProps {
   currentPage: number
   totalDocs: number
   neighborhoods: Neighborhood[]
+  users: User[]
   initialFilters: {
     status: string
-    search: string
+    owner: string
     propertyType: string
     listingType: string
   }
@@ -32,29 +44,18 @@ export const AdminPropertiesList: React.FC<AdminPropertiesListProps> = ({
   currentPage,
   totalDocs,
   neighborhoods,
+  users,
   initialFilters,
 }) => {
-  const router = useRouter()
-  const searchParams = useSearchParams()
+  // const router = useRouter()
+  // const searchParams = useSearchParams()
   const [properties, setProperties] = useState(initialProperties)
   const [filters, setFilters] = useState(initialFilters)
-  const [searchInput, setSearchInput] = useState(initialFilters.search)
   const [currentPageState, setCurrentPageState] = useState(currentPage)
   const [totalPagesState, setTotalPagesState] = useState(totalPages)
   const [totalDocsState, setTotalDocsState] = useState(totalDocs)
   const [loading, setLoading] = useState(false)
   const [updatingProperty, setUpdatingProperty] = useState<string | null>(null)
-
-  const debouncedSearch = useDebounce(searchInput, 500)
-
-  // Handle debounced search
-  useEffect(() => {
-    if (debouncedSearch !== filters.search) {
-      const updatedFilters = { ...filters, search: debouncedSearch }
-      setFilters(updatedFilters)
-      fetchProperties(updatedFilters, 1)
-    }
-  }, [debouncedSearch])
 
   const statusOptions = [
     { value: 'all', label: 'All Status', icon: Building },
@@ -78,6 +79,14 @@ export const AdminPropertiesList: React.FC<AdminPropertiesListProps> = ({
     { value: 'rent', label: 'For Rent' },
   ]
 
+  const ownerOptions = [
+    { value: 'all', label: 'All Owners' },
+    ...users.map((user) => ({
+      value: user.id,
+      label: user.name || user.email || 'Unknown User',
+    })),
+  ]
+
   const fetchProperties = async (newFilters: typeof filters, page: number = 1) => {
     setLoading(true)
     try {
@@ -95,7 +104,7 @@ export const AdminPropertiesList: React.FC<AdminPropertiesListProps> = ({
       })
 
       if (!response.ok) {
-        throw new Error('Failed to fetch properties')
+        throw new Error('Failed to fetch properties. Check your internet connection')
       }
 
       const data = await response.json()
@@ -138,14 +147,28 @@ export const AdminPropertiesList: React.FC<AdminPropertiesListProps> = ({
   const updatePropertyStatus = async (propertyId: string, updateData: PropertyUpdateData) => {
     setUpdatingProperty(propertyId)
     try {
-      const response = await fetch(`/api/admin/properties/${propertyId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
+      const stringifiedQuery = qs.stringify(
+        {
+          where: {
+            id: {
+              equals: propertyId,
+            },
+          },
         },
-        credentials: 'include',
-        body: JSON.stringify(updateData),
-      })
+        { addQueryPrefix: true },
+      )
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/properties/${stringifiedQuery}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify(updateData),
+        },
+      )
 
       if (!response.ok) {
         throw new Error('Failed to update property')
@@ -227,28 +250,40 @@ export const AdminPropertiesList: React.FC<AdminPropertiesListProps> = ({
   return (
     <div className="space-y-6">
       {/* Filters */}
-      <div className="bg-card rounded-lg shadow-theme border border-card p-6">
+      <div className="bg-card rounded-lg shadow-sm border border-border p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-          {/* Search */}
+          {/* Owner Filter */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <input
-              type="text"
-              placeholder="Search properties..."
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-            />
+            <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <select
+              value={filters.owner}
+              onChange={(e) => updateFilters({ owner: e.target.value })}
+              className="w-full pl-10 pr-4 py-2 bg-background text-foreground border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent appearance-none"
+            >
+              {ownerOptions.map((option) => (
+                <option
+                  key={option.value}
+                  value={option.value}
+                  className="bg-background text-foreground"
+                >
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Status Filter */}
           <select
             value={filters.status}
             onChange={(e) => updateFilters({ status: e.target.value })}
-            className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 bg-background text-foreground border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
           >
             {statusOptions.map((option) => (
-              <option key={option.value} value={option.value}>
+              <option
+                key={option.value}
+                value={option.value}
+                className="bg-background text-foreground"
+              >
                 {option.label}
               </option>
             ))}
@@ -258,10 +293,14 @@ export const AdminPropertiesList: React.FC<AdminPropertiesListProps> = ({
           <select
             value={filters.propertyType}
             onChange={(e) => updateFilters({ propertyType: e.target.value })}
-            className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 bg-background text-foreground border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
           >
             {propertyTypeOptions.map((option) => (
-              <option key={option.value} value={option.value}>
+              <option
+                key={option.value}
+                value={option.value}
+                className="bg-background text-foreground"
+              >
                 {option.label}
               </option>
             ))}
@@ -271,10 +310,14 @@ export const AdminPropertiesList: React.FC<AdminPropertiesListProps> = ({
           <select
             value={filters.listingType}
             onChange={(e) => updateFilters({ listingType: e.target.value })}
-            className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 bg-background text-foreground border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
           >
             {listingTypeOptions.map((option) => (
-              <option key={option.value} value={option.value}>
+              <option
+                key={option.value}
+                value={option.value}
+                className="bg-background text-foreground"
+              >
                 {option.label}
               </option>
             ))}

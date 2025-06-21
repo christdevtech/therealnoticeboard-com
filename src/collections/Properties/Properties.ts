@@ -351,7 +351,7 @@ export const Properties: CollectionConfig = {
               filterOptions: ({ siblingData }) => {
                 return {
                   propertyTypes: {
-                    contains: siblingData.propertyType,
+                    contains: (siblingData as any).propertyType,
                   },
                 }
               },
@@ -505,7 +505,7 @@ export const Properties: CollectionConfig = {
         beforeChange: [
           ({ req, operation, value }) => {
             // Auto-assign current user as owner on create
-            if (operation === 'create' && req.user) {
+            if (operation === 'create' && req.user && !value) {
               return req.user.id
             }
             return value

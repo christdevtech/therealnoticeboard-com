@@ -171,7 +171,7 @@ export const AdminVerificationPanel: React.FC<AdminVerificationPanelProps> = ({ 
                 <div className="flex-1">
                   <div className="flex items-center mb-2">
                     <h3 className="font-semibold text-card-foreground mr-2">{request.userName}</h3>
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning/20 text-warning-foreground">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning text-warning-foreground">
                       Pending Review
                     </span>
                   </div>

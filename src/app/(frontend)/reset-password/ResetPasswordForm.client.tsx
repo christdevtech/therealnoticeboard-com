@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
 interface FormData {
@@ -26,7 +26,7 @@ export function ResetPasswordForm() {
   const [token, setToken] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const router = useRouter()
+  // const router = useRouter()
   const searchParams = useSearchParams()
 
   useEffect(() => {

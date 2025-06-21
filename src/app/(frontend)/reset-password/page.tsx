@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { ResetPasswordForm } from './ResetPasswordForm.client'
-
+export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   title: 'Reset Password | The Real Notice Board',
   description: 'Create a new password for your account.',

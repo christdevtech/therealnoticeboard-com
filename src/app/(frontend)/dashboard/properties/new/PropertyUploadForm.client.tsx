@@ -8,6 +8,7 @@ import Link from 'next/link'
 // Mapbox imports
 import Map, { Marker, NavigationControl, GeolocateControl } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
+import { Trash } from 'lucide-react'
 
 interface PropertyUploadFormProps {
   user: User
@@ -326,7 +327,7 @@ export const PropertyUploadForm: React.FC<PropertyUploadFormProps> = ({
         throw new Error(errorData.message || 'Failed to create property')
       }
 
-      const result = await response.json()
+      // const result = await response.json()
 
       // Redirect to dashboard with success message
       router.push('/dashboard?success=property-created')
@@ -1222,9 +1223,9 @@ export const PropertyUploadForm: React.FC<PropertyUploadFormProps> = ({
                             <button
                               type="button"
                               onClick={() => removeImage(index)}
-                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600"
+                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-700"
                             >
-                              ×
+                              <Trash className="w-4 h-4" />
                             </button>
                           </div>
                         ))}

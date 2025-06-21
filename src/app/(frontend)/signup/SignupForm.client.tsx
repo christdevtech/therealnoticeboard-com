@@ -110,7 +110,7 @@ export function SignupForm() {
       })
 
       if (response.ok) {
-        const data = await response.json()
+        // const data = await response.json()
         setIsSuccess(true)
         return
       }
@@ -158,8 +158,8 @@ export function SignupForm() {
         </div>
         <h2 className="text-2xl font-bold text-foreground mb-2">Account Created!</h2>
         <p className="text-muted-foreground mb-6">
-          We've sent a verification email to <strong>{formData.email}</strong>. Please check your
-          inbox and click the verification link to activate your account.
+          We&rsquo;ve sent a verification email to <strong>{formData.email}</strong>. Please check
+          your inbox and click the verification link to activate your account.
         </p>
         <div className="space-y-3">
           <Link

@@ -2,7 +2,7 @@
 import { cn } from '@/utilities/ui'
 import useClickableCard from '@/utilities/useClickableCard'
 import Link from 'next/link'
-import React, { Fragment } from 'react'
+import React from 'react'
 import { MapPin, Home, DollarSign, Square } from 'lucide-react'
 
 import type { Property } from '@/payload-types'
@@ -116,8 +116,10 @@ export const PropertyCard: React.FC<{
           <div className="absolute top-3 left-3">
             <span
               className={cn(
-                'px-2 py-1 text-xs font-medium rounded-full text-primary-foreground',
-                listingType === 'sale' ? 'bg-success' : 'bg-primary',
+                'px-2 py-1 text-xs font-medium rounded-full',
+                listingType === 'sale'
+                  ? 'bg-success text-success-foreground'
+                  : 'bg-primary text-primary-foreground',
               )}
             >
               {getListingTypeLabel(listingType)}
@@ -128,7 +130,7 @@ export const PropertyCard: React.FC<{
         {/* Property type badge */}
         {propertyType && (
           <div className="absolute top-3 right-3">
-            <span className="px-2 py-1 text-xs font-medium rounded-full bg-background/70 text-primary-foreground backdrop-blur-sm">
+            <span className="px-2 py-1 text-xs font-medium rounded-full bg-background/70 text-foreground backdrop-blur-sm">
               {getPropertyTypeLabel(propertyType)}
             </span>
           </div>

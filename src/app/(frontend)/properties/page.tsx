@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import type { Where } from 'payload'
 import { PropertyCollectionArchive } from '@/components/PropertyCollectionArchive'
 import { PropertyFilters } from '@/components/PropertyFilters'
 import { PageRange } from '@/components/PageRange'
@@ -53,8 +54,8 @@ export default async function Page({ searchParams }: Props) {
     },
   })
 
-  // Build where conditions
-  const whereConditions: any = {
+  // Build where conditions with proper typing
+  const whereConditions: Where = {
     status: {
       equals: 'approved',
     },
@@ -74,7 +75,7 @@ export default async function Page({ searchParams }: Props) {
     }
   }
 
-  // Neighborhood filter
+  // Neighborhood filter (relationship field)
   if (neighborhood && neighborhood !== 'all') {
     whereConditions.neighborhood = {
       equals: neighborhood,
@@ -83,24 +84,26 @@ export default async function Page({ searchParams }: Props) {
 
   // Price range filter
   if (minPrice || maxPrice) {
-    whereConditions.price = {}
+    const priceConditions: any = {}
     if (minPrice) {
-      whereConditions.price.greater_than_equal = parseInt(minPrice, 10)
+      priceConditions.greater_than_equal = parseInt(minPrice, 10)
     }
     if (maxPrice) {
-      whereConditions.price.less_than_equal = parseInt(maxPrice, 10)
+      priceConditions.less_than_equal = parseInt(maxPrice, 10)
     }
+    whereConditions.price = priceConditions
   }
 
   // Area range filter
   if (minArea || maxArea) {
-    whereConditions.area = {}
+    const areaConditions: any = {}
     if (minArea) {
-      whereConditions.area.greater_than_equal = parseInt(minArea, 10)
+      areaConditions.greater_than_equal = parseInt(minArea, 10)
     }
     if (maxArea) {
-      whereConditions.area.less_than_equal = parseInt(maxArea, 10)
+      areaConditions.less_than_equal = parseInt(maxArea, 10)
     }
+    whereConditions.area = areaConditions
   }
 
   const properties = await payload.find({

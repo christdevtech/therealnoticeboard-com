@@ -1,6 +1,5 @@
 import { admin } from '@/access/admin'
 import { anyone } from '@/access/anyone'
-import { authenticated } from '@/access/authenticated'
 import { CollectionConfig } from 'payload'
 
 export const Amenities: CollectionConfig = {

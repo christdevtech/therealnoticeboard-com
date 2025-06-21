@@ -10,7 +10,10 @@ interface VerificationContentProps {
   existingRequest: any
 }
 
-export const VerificationContent: React.FC<VerificationContentProps> = ({ user, existingRequest }) => {
+export const VerificationContent: React.FC<VerificationContentProps> = ({
+  user,
+  existingRequest,
+}) => {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
@@ -24,20 +27,20 @@ export const VerificationContent: React.FC<VerificationContentProps> = ({ user, 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    setFormData((prev) => ({ ...prev, [name]: value }))
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }))
+      setErrors((prev) => ({ ...prev, [name]: '' }))
     }
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target
     if (files && files[0]) {
-      setFormData(prev => ({ ...prev, [name]: files[0] }))
+      setFormData((prev) => ({ ...prev, [name]: files[0] }))
       // Clear error when user selects file
       if (errors[name]) {
-        setErrors(prev => ({ ...prev, [name]: '' }))
+        setErrors((prev) => ({ ...prev, [name]: '' }))
       }
     }
   }
@@ -85,7 +88,7 @@ export const VerificationContent: React.FC<VerificationContentProps> = ({ user, 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!validateForm()) {
       return
     }
@@ -157,13 +160,14 @@ export const VerificationContent: React.FC<VerificationContentProps> = ({ user, 
         credentials: 'include',
       })
 
-      setSubmitMessage('Verification request submitted successfully! You will receive an email once your documents are reviewed.')
-      
+      setSubmitMessage(
+        'Verification request submitted successfully! You will receive an email once your documents are reviewed.',
+      )
+
       // Redirect to dashboard after a delay
       setTimeout(() => {
         router.push('/dashboard')
       }, 3000)
-
     } catch (error) {
       console.error('Error submitting verification request:', error)
       setSubmitMessage('Failed to submit verification request. Please try again.')
@@ -178,12 +182,25 @@ export const VerificationContent: React.FC<VerificationContentProps> = ({ user, 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            <svg
+              className="w-8 h-8 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
             </svg>
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Identity Verified</h1>
-          <p className="text-gray-600 mb-6">Your identity has been successfully verified. You can now list properties on The Real Notice Board.</p>
+          <p className="text-gray-600 mb-6">
+            Your identity has been successfully verified. You can now list properties on The Real
+            Notice Board.
+          </p>
           <Link
             href="/dashboard"
             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
@@ -201,12 +218,25 @@ export const VerificationContent: React.FC<VerificationContentProps> = ({ user, 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
           <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              className="w-8 h-8 text-yellow-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Verification Pending</h1>
-          <p className="text-gray-600 mb-6">Your verification request is currently being reviewed. You will receive an email once the review is complete.</p>
+          <p className="text-gray-600 mb-6">
+            Your verification request is currently being reviewed. You will receive an email once
+            the review is complete.
+          </p>
           <div className="text-sm text-gray-500 mb-6">
             <p>Submitted: {new Date(existingRequest.submittedAt).toLocaleDateString()}</p>
           </div>
@@ -236,12 +266,25 @@ export const VerificationContent: React.FC<VerificationContentProps> = ({ user, 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-8 h-8 text-red-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Verification Rejected</h1>
-            <p className="text-gray-600 mb-4">Your previous verification request was rejected. Please review the feedback below and submit new documents.</p>
+            <p className="text-gray-600 mb-4">
+              Your previous verification request was rejected. Please review the feedback below and
+              submit new documents.
+            </p>
             {existingRequest.adminNotes && (
               <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
                 <h3 className="font-medium text-red-800 mb-2">Admin Feedback:</h3>
@@ -249,11 +292,13 @@ export const VerificationContent: React.FC<VerificationContentProps> = ({ user, 
               </div>
             )}
           </div>
-          
+
           {/* Show the form for resubmission */}
           <form onSubmit={handleSubmit} className="space-y-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Submit New Verification Documents</h2>
-            
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              Submit New Verification Documents
+            </h2>
+
             {/* Rest of the form content will be the same as below */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -295,7 +340,10 @@ export const VerificationContent: React.FC<VerificationContentProps> = ({ user, 
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="identificationDocument" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="identificationDocument"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Identification Document *
                 </label>
                 <input
@@ -308,12 +356,19 @@ export const VerificationContent: React.FC<VerificationContentProps> = ({ user, 
                     errors.identificationDocument ? 'border-red-500' : 'border-gray-300'
                   }`}
                 />
-                <p className="text-sm text-gray-500 mt-1">Upload a clear photo of your ID card, passport, or driver's license</p>
-                {errors.identificationDocument && <p className="text-red-500 text-sm mt-1">{errors.identificationDocument}</p>}
+                <p className="text-sm text-gray-500 mt-1">
+                  Upload a clear photo of your ID card, passport, or driver&rsquo;s license
+                </p>
+                {errors.identificationDocument && (
+                  <p className="text-red-500 text-sm mt-1">{errors.identificationDocument}</p>
+                )}
               </div>
 
               <div>
-                <label htmlFor="selfieWithId" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="selfieWithId"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Selfie with ID *
                 </label>
                 <input
@@ -326,15 +381,23 @@ export const VerificationContent: React.FC<VerificationContentProps> = ({ user, 
                     errors.selfieWithId ? 'border-red-500' : 'border-gray-300'
                   }`}
                 />
-                <p className="text-sm text-gray-500 mt-1">Upload a selfie holding your identification document</p>
-                {errors.selfieWithId && <p className="text-red-500 text-sm mt-1">{errors.selfieWithId}</p>}
+                <p className="text-sm text-gray-500 mt-1">
+                  Upload a selfie holding your identification document
+                </p>
+                {errors.selfieWithId && (
+                  <p className="text-red-500 text-sm mt-1">{errors.selfieWithId}</p>
+                )}
               </div>
             </div>
 
             {submitMessage && (
-              <div className={`p-4 rounded-md ${
-                submitMessage.includes('successfully') ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
-              }`}>
+              <div
+                className={`p-4 rounded-md ${
+                  submitMessage.includes('successfully')
+                    ? 'bg-green-50 text-green-700'
+                    : 'bg-red-50 text-red-700'
+                }`}
+              >
                 {submitMessage}
               </div>
             )}
@@ -367,7 +430,8 @@ export const VerificationContent: React.FC<VerificationContentProps> = ({ user, 
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Identity Verification</h1>
           <p className="text-gray-600">
-            To ensure the safety and security of our platform, we require identity verification before you can list properties.
+            To ensure the safety and security of our platform, we require identity verification
+            before you can list properties.
           </p>
         </div>
 
@@ -412,7 +476,10 @@ export const VerificationContent: React.FC<VerificationContentProps> = ({ user, 
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="identificationDocument" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="identificationDocument"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Identification Document *
               </label>
               <input
@@ -425,12 +492,19 @@ export const VerificationContent: React.FC<VerificationContentProps> = ({ user, 
                   errors.identificationDocument ? 'border-red-500' : 'border-gray-300'
                 }`}
               />
-              <p className="text-sm text-gray-500 mt-1">Upload a clear photo of your ID card, passport, or driver's license</p>
-              {errors.identificationDocument && <p className="text-red-500 text-sm mt-1">{errors.identificationDocument}</p>}
+              <p className="text-sm text-gray-500 mt-1">
+                Upload a clear photo of your ID card, passport, or driver&rsquo;s license
+              </p>
+              {errors.identificationDocument && (
+                <p className="text-red-500 text-sm mt-1">{errors.identificationDocument}</p>
+              )}
             </div>
 
             <div>
-              <label htmlFor="selfieWithId" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="selfieWithId"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Selfie with ID *
               </label>
               <input
@@ -443,8 +517,12 @@ export const VerificationContent: React.FC<VerificationContentProps> = ({ user, 
                   errors.selfieWithId ? 'border-red-500' : 'border-gray-300'
                 }`}
               />
-              <p className="text-sm text-gray-500 mt-1">Upload a selfie holding your identification document</p>
-              {errors.selfieWithId && <p className="text-red-500 text-sm mt-1">{errors.selfieWithId}</p>}
+              <p className="text-sm text-gray-500 mt-1">
+                Upload a selfie holding your identification document
+              </p>
+              {errors.selfieWithId && (
+                <p className="text-red-500 text-sm mt-1">{errors.selfieWithId}</p>
+              )}
             </div>
           </div>
 
@@ -459,9 +537,13 @@ export const VerificationContent: React.FC<VerificationContentProps> = ({ user, 
           </div>
 
           {submitMessage && (
-            <div className={`p-4 rounded-md ${
-              submitMessage.includes('successfully') ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
-            }`}>
+            <div
+              className={`p-4 rounded-md ${
+                submitMessage.includes('successfully')
+                  ? 'bg-green-50 text-green-700'
+                  : 'bg-red-50 text-red-700'
+              }`}
+            >
               {submitMessage}
             </div>
           )}

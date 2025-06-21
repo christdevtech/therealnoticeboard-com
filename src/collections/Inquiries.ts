@@ -1,13 +1,13 @@
 import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '../access/authenticated'
-import { inquiriesRead, inquiriesDelete } from '../access/inquiries'
+import { inquiriesDelete } from '../access/inquiries'
 
 export const Inquiries: CollectionConfig = {
   slug: 'inquiries',
   access: {
     create: authenticated,
-    read: inquiriesRead,
+    read: authenticated,
     update: authenticated,
     delete: inquiriesDelete,
   },

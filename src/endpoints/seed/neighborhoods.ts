@@ -6,7 +6,7 @@ export const seedNeighborhoods = async (payload: Payload): Promise<void> => {
     {
       name: 'Akwa',
       city: 'Douala',
-      region: 'littoral',
+      region: 'littoral' as const,
       description: 'Central business district of Douala with modern offices and commercial centers',
       coordinates: {
         latitude: 4.0511,
@@ -16,7 +16,7 @@ export const seedNeighborhoods = async (payload: Payload): Promise<void> => {
     {
       name: 'Bonanjo',
       city: 'Douala',
-      region: 'littoral',
+      region: 'littoral' as const,
       description: 'Historic administrative and commercial quarter of Douala',
       coordinates: {
         latitude: 4.0483,
@@ -26,7 +26,7 @@ export const seedNeighborhoods = async (payload: Payload): Promise<void> => {
     {
       name: 'Bonapriso',
       city: 'Douala',
-      region: 'littoral',
+      region: 'littoral' as const,
       description: 'Upscale residential area with embassies and luxury accommodations',
       coordinates: {
         latitude: 4.0614,
@@ -37,7 +37,7 @@ export const seedNeighborhoods = async (payload: Payload): Promise<void> => {
     {
       name: 'Centre Ville',
       city: 'Yaoundé',
-      region: 'centre',
+      region: 'centre' as const,
       description: 'Downtown Yaoundé with government buildings and commercial activities',
       coordinates: {
         latitude: 3.848,
@@ -47,7 +47,7 @@ export const seedNeighborhoods = async (payload: Payload): Promise<void> => {
     {
       name: 'Bastos',
       city: 'Yaoundé',
-      region: 'centre',
+      region: 'centre' as const,
       description: 'Diplomatic quarter with embassies and upscale residences',
       coordinates: {
         latitude: 3.8691,
@@ -57,7 +57,7 @@ export const seedNeighborhoods = async (payload: Payload): Promise<void> => {
     {
       name: 'Nlongkak',
       city: 'Yaoundé',
-      region: 'centre',
+      region: 'centre' as const,
       description: 'Residential area popular with expatriates and professionals',
       coordinates: {
         latitude: 3.8756,
@@ -68,7 +68,7 @@ export const seedNeighborhoods = async (payload: Payload): Promise<void> => {
     {
       name: 'Centre Ville',
       city: 'Bamenda',
-      region: 'northwest',
+      region: 'northwest' as const,
       description: 'Commercial center of Bamenda with markets and business districts',
       coordinates: {
         latitude: 5.9597,
@@ -78,7 +78,7 @@ export const seedNeighborhoods = async (payload: Payload): Promise<void> => {
     {
       name: 'Centre Ville',
       city: 'Bafoussam',
-      region: 'west',
+      region: 'west' as const,
       description: 'Central business area of Bafoussam',
       coordinates: {
         latitude: 5.4781,
@@ -88,7 +88,7 @@ export const seedNeighborhoods = async (payload: Payload): Promise<void> => {
     {
       name: 'Centre Ville',
       city: 'Garoua',
-      region: 'north',
+      region: 'north' as const,
       description: 'Commercial hub of northern Cameroon',
       coordinates: {
         latitude: 9.3265,
@@ -98,7 +98,7 @@ export const seedNeighborhoods = async (payload: Payload): Promise<void> => {
     {
       name: 'Centre Ville',
       city: 'Maroua',
-      region: 'far-north',
+      region: 'far-north' as const,
       description: 'Administrative and commercial center of Far North region',
       coordinates: {
         latitude: 10.5913,

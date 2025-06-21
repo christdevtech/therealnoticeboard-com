@@ -4,7 +4,6 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
-import RichText from '@/components/RichText'
 import {
   MapPin,
   Home,
@@ -19,11 +18,7 @@ import {
   Bed,
   Bath,
   Building,
-  Car,
-  Wifi,
   Shield,
-  Zap,
-  Droplets,
   Heart,
   Share2,
 } from 'lucide-react'
@@ -111,17 +106,17 @@ export default async function Property({ params: paramsPromise }: Args) {
   }
 
   // Get amenity icon
-  const getAmenityIcon = (amenityName: string) => {
-    const iconMap: { [key: string]: React.ReactNode } = {
-      'Wi-Fi': <Wifi className="w-4 h-4" />,
-      Security: <Shield className="w-4 h-4" />,
-      Electricity: <Zap className="w-4 h-4" />,
-      Water: <Droplets className="w-4 h-4" />,
-      Parking: <Car className="w-4 h-4" />,
-      Generator: <Zap className="w-4 h-4" />,
-    }
-    return iconMap[amenityName] || <Home className="w-4 h-4" />
-  }
+  // const getAmenityIcon = (amenityName: string) => {
+  //   const iconMap: { [key: string]: React.ReactNode } = {
+  //     'Wi-Fi': <Wifi className="w-4 h-4" />,
+  //     Security: <Shield className="w-4 h-4" />,
+  //     Electricity: <Zap className="w-4 h-4" />,
+  //     Water: <Droplets className="w-4 h-4" />,
+  //     Parking: <Car className="w-4 h-4" />,
+  //     Generator: <Zap className="w-4 h-4" />,
+  //   }
+  //   return iconMap[amenityName] || <Home className="w-4 h-4" />
+  // }
 
   return (
     <article className="">
@@ -396,7 +391,6 @@ export default async function Property({ params: paramsPromise }: Args) {
                             key={index}
                             className="flex items-center gap-3 p-3 bg-secondary rounded-lg"
                           >
-                            {/* {getAmenityIcon(amenity.name)} */}
                             {amenity.icon && (
                               <Media resource={amenity.icon} className="w-8 h-8 text-success" />
                             )}
@@ -551,21 +545,43 @@ export default async function Property({ params: paramsPromise }: Args) {
                   </div>
                 </div>
 
-                {/* Safety Notice */}
-                <div className="bg-warning border border-warning/20 rounded-lg p-4">
-                  <div className="flex items-start gap-3">
-                    <div className="aspect-square border border-warning-foreground rounded-full p-1 ">
-                      <Shield className="w-5 h-5 text-warning-foreground mt-0.5" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-warning-foreground mb-1">Safety First</h4>
-                      <p className="text-sm text-warning-foreground">
-                        Always verify property details and meet in safe, public locations. Never
-                        send money without viewing the property.
-                      </p>
+                {/* Safety Notice - Dynamic based on property status */}
+                {property.status === 'approved' ? (
+                  <div className="bg-success border border-success/20 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <div className="aspect-square border border-success-foreground rounded-full p-1">
+                        <Shield className="w-5 h-5 text-success-foreground mt-0.5" />
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-success-foreground mb-1">
+                          Verified Property
+                        </h4>
+                        <p className="text-sm text-success-foreground">
+                          This property has been verified by our team. You can proceed with
+                          confidence, but always meet in safe, public locations for viewings.
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="bg-warning border border-warning/20 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <div className="aspect-square border border-warning-foreground rounded-full p-1">
+                        <Shield className="w-5 h-5 text-warning-foreground mt-0.5" />
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-warning-foreground mb-1">
+                          Unverified Property
+                        </h4>
+                        <p className="text-sm text-warning-foreground">
+                          This property is still pending verification. We advise you to only verify
+                          property details and meet in safe, public locations. Never send money
+                          without viewing the property.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

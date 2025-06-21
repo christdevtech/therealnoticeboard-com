@@ -1,35 +1,20 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import { useRouter } from 'next/navigation'
-// import { useAuth } from '@/providers/Auth'
 import { User } from '@/payload-types'
 import Link from 'next/link'
 import { AdminVerificationPanel } from './admin/AdminVerificationPanel.client'
 import { AdminPropertyPanel } from './admin/AdminPropertyPanel.client'
-// import { AdminPropertyPanel } from './admin/properties/AdminPropertyPanel.client'
-// import { AdminVerificationPanel } from './AdminVerificationPanel.client'
+import { DashboardStats } from './DashboardStats.client'
 
 interface DashboardContentProps {
   user: User
 }
 
-interface DashboardStats {
-  totalProperties: number
-  totalInquiries: number
-  pendingInquiries: number
-}
-
 export const DashboardContent: React.FC<DashboardContentProps> = ({ user }) => {
   // const { logout } = useAuth()
   const router = useRouter()
-
-  // Mock stats data - in a real app, this would come from the server or API
-  const stats: DashboardStats = {
-    totalProperties: 0,
-    totalInquiries: 0,
-    pendingInquiries: 0,
-  }
 
   // Check if user needs verification
   const needsVerification = user.verificationStatus !== 'verified'
@@ -39,14 +24,14 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({ user }) => {
   const handleLogout = async () => {
     // await logout()
     try {
-      const req = await fetch('/api/users/logout', {
+      await fetch('/api/users/logout', {
         method: 'POST',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
       })
-      const data = await req.json()
+      // const data = await req.json()
     } catch (err) {
       console.log(err)
     }
@@ -186,85 +171,7 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({ user }) => {
           </div>
         )}
         {/* Stats Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-card rounded-lg shadow-theme border border-card p-6">
-            <div className="flex items-center">
-              <div className="p-2 bg-primary/20 rounded-lg">
-                <svg
-                  className="w-6 h-6 text-primary"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                  />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">Total Properties</p>
-                <p className="text-2xl font-bold text-card-foreground">
-                  {stats?.totalProperties || 0}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-card rounded-lg shadow-theme border border-card p-6">
-            <div className="flex items-center">
-              <div className="p-2 bg-success/20 rounded-lg">
-                <svg
-                  className="w-6 h-6 text-success"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                  />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">Total Inquiries</p>
-                <p className="text-2xl font-bold text-card-foreground">
-                  {stats?.totalInquiries || 0}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-card rounded-lg shadow-theme border border-card p-6">
-            <div className="flex items-center">
-              <div className="p-2 bg-warning/20 rounded-lg">
-                <svg
-                  className="w-6 h-6 text-warning"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">Pending Inquiries</p>
-                <p className="text-2xl font-bold text-card-foreground">
-                  {stats?.pendingInquiries || 0}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <DashboardStats user={user} />
         {/* Quick Actions */}
         <div className="bg-card rounded-lg shadow-theme border border-card p-6 mb-8">
           <h2 className="text-xl font-bold text-card-foreground mb-4">Quick Actions</h2>

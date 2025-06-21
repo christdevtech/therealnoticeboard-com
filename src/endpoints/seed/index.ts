@@ -10,7 +10,7 @@ import { post1 } from './post-1'
 import { post2 } from './post-2'
 import { post3 } from './post-3'
 import { seedNeighborhoods } from './neighborhoods'
-import { seedFAQs } from './faqs'
+// import { seedFAQs } from './faqs'
 
 const collections: CollectionSlug[] = [
   'categories',
@@ -109,6 +109,8 @@ export const seed = async ({
         name: 'Demo Author',
         email: 'demo-author@example.com',
         password: 'password',
+        role: 'admin',
+        verificationStatus: 'verified',
       },
     }),
     payload.create({
@@ -349,8 +351,8 @@ export const seed = async ({
   payload.logger.info(`— Seeding neighborhoods...`)
   await seedNeighborhoods(payload)
 
-  payload.logger.info(`— Seeding FAQs...`)
-  await seedFAQs(payload)
+  // payload.logger.info(`— Seeding FAQs...`)
+  // await seedFAQs(payload)
 
   payload.logger.info('Seeded database successfully!')
 }
