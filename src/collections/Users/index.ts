@@ -9,6 +9,7 @@ import {
   generatePasswordResetEmailHTML,
   generatePasswordResetEmailSubject,
 } from '../../email/authEmailsWithLogging'
+import { ensureFirstUserIsAdmin } from './hooks/ensureFirstUserIsAdmin'
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -33,6 +34,9 @@ export const Users: CollectionConfig = {
       generateEmailHTML: generatePasswordResetEmailHTML,
       generateEmailSubject: generatePasswordResetEmailSubject,
     },
+  },
+  hooks: {
+    beforeChange: [ensureFirstUserIsAdmin],
   },
   fields: [
     {
