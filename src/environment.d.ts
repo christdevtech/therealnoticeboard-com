@@ -5,6 +5,8 @@ declare global {
       DATABASE_URI: string
       NEXT_PUBLIC_SERVER_URL: string
       VERCEL_PROJECT_PRODUCTION_URL: string
+      GEMINI_API_KEY: string
+      NEXT_PUBLIC_CHAT_ENABLED: string
     }
   }
 }

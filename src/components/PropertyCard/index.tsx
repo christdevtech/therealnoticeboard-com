@@ -3,7 +3,7 @@ import { cn } from '@/utilities/ui'
 import useClickableCard from '@/utilities/useClickableCard'
 import Link from 'next/link'
 import React from 'react'
-import { MapPin, Home, DollarSign, Square } from 'lucide-react'
+import { MapPin, Home, DollarSign, Square, Shield } from 'lucide-react'
 
 import type { Property } from '@/payload-types'
 
@@ -21,6 +21,7 @@ export type CardPropertyData = Pick<
   | 'images'
   | 'neighborhood'
   | 'meta'
+  | 'owner'
 >
 
 export const PropertyCard: React.FC<{
@@ -45,6 +46,7 @@ export const PropertyCard: React.FC<{
     images,
     neighborhood,
     meta,
+    owner,
   } = doc || {}
 
   const titleToUse = titleFromProps || title
@@ -174,6 +176,14 @@ export const PropertyCard: React.FC<{
           <div className="flex items-center gap-1 mb-3 text-sm text-muted-foreground">
             <Square className="w-3 h-3" />
             <span>{formatArea(area)}</span>
+          </div>
+        )}
+
+        {/* Verified Seller Badge */}
+        {owner && typeof owner === 'object' && owner.verificationStatus === 'verified' && (
+          <div className="flex items-center gap-1.5 mb-2 text-xs">
+            <Shield className="w-3.5 h-3.5 text-emerald-500" />
+            <span className="text-emerald-600 dark:text-emerald-400 font-medium">Verified Seller</span>
           </div>
         )}
 

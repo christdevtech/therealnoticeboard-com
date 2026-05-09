@@ -19,6 +19,7 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start"
   },
   "dependencies": {
+    "@google/genai": "^1.51.0",
     "@payloadcms/admin-bar": "3.33.0",
     "@payloadcms/db-mongodb": "3.33.0",
     "@payloadcms/email-nodemailer": "3.33.0",

@@ -8,6 +8,7 @@ import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 
 import { Categories } from './collections/Categories'
+import { ChatSessions } from './collections/ChatSessions'
 import { EmailLogs } from './collections/EmailLogs'
 import { FAQs } from './collections/FAQs'
 import { Inquiries } from './collections/Inquiries'
@@ -17,6 +18,8 @@ import { Neighborhoods } from './collections/Neighborhoods'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
 import { Properties } from './collections/Properties/Properties'
+import { Reviews } from './collections/Reviews'
+import { Transactions } from './collections/Transactions'
 import { Users } from './collections/Users'
 import { VerificationRequests } from './collections/VerificationRequests'
 import { Footer } from './Footer/config'
@@ -96,6 +99,9 @@ export default buildConfig({
     KnowledgeBase,
     EmailLogs,
     VerificationRequests,
+    Reviews,
+    Transactions,
+    ChatSessions,
   ],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],

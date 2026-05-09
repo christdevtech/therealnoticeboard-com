@@ -94,6 +94,67 @@ export const Users: CollectionConfig = {
       type: 'textarea',
       label: 'Address',
     },
+    // Vendor Profile — visible after verification
+    {
+      name: 'vendorProfile',
+      type: 'group',
+      label: 'Vendor Profile',
+      admin: {
+        condition: (data) => data?.verificationStatus === 'verified',
+        description: 'Public vendor profile (visible after verification)',
+      },
+      fields: [
+        {
+          name: 'shopName',
+          type: 'text',
+          admin: {
+            description: 'Business or shop display name',
+          },
+        },
+        {
+          name: 'bio',
+          type: 'textarea',
+          admin: {
+            description: 'Tell buyers about yourself or your business',
+          },
+        },
+        {
+          name: 'avatar',
+          type: 'upload',
+          relationTo: 'media',
+          admin: {
+            description: 'Profile photo or business logo',
+          },
+        },
+        {
+          name: 'specialties',
+          type: 'select',
+          hasMany: true,
+          options: [
+            { label: 'Land Sales', value: 'land' },
+            { label: 'Residential', value: 'residential' },
+            { label: 'Commercial', value: 'commercial' },
+            { label: 'Industrial', value: 'industrial' },
+            { label: 'Rentals', value: 'rentals' },
+          ],
+          admin: {
+            description: 'Areas of specialization',
+          },
+        },
+        {
+          name: 'responseTime',
+          type: 'select',
+          options: [
+            { label: 'Within an hour', value: 'hour' },
+            { label: 'Within a day', value: 'day' },
+            { label: 'Within a week', value: 'week' },
+          ],
+          admin: {
+            description: 'Typical response time to inquiries',
+          },
+        },
+      ],
+    },
   ],
   timestamps: true,
 }

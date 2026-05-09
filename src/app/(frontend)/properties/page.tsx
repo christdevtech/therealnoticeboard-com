@@ -125,6 +125,7 @@ export default async function Page({ searchParams }: Props) {
       images: true,
       neighborhood: true,
       meta: true,
+      owner: true,
     },
   })
 

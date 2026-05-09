@@ -80,6 +80,9 @@ export interface Config {
     'knowledge-base': KnowledgeBase;
     'email-logs': EmailLog;
     'verification-requests': VerificationRequest;
+    reviews: Review;
+    transactions: Transaction;
+    'chat-sessions': ChatSession;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -104,6 +107,9 @@ export interface Config {
     'knowledge-base': KnowledgeBaseSelect<false> | KnowledgeBaseSelect<true>;
     'email-logs': EmailLogsSelect<false> | EmailLogsSelect<true>;
     'verification-requests': VerificationRequestsSelect<false> | VerificationRequestsSelect<true>;
+    reviews: ReviewsSelect<false> | ReviewsSelect<true>;
+    transactions: TransactionsSelect<false> | TransactionsSelect<true>;
+    'chat-sessions': ChatSessionsSelect<false> | ChatSessionsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -305,6 +311,31 @@ export interface User {
   verificationStatus: 'unverified' | 'pending' | 'verified' | 'rejected';
   phone?: string | null;
   address?: string | null;
+  /**
+   * Public vendor profile (visible after verification)
+   */
+  vendorProfile?: {
+    /**
+     * Business or shop display name
+     */
+    shopName?: string | null;
+    /**
+     * Tell buyers about yourself or your business
+     */
+    bio?: string | null;
+    /**
+     * Profile photo or business logo
+     */
+    avatar?: (string | null) | Media;
+    /**
+     * Areas of specialization
+     */
+    specialties?: ('land' | 'residential' | 'commercial' | 'industrial' | 'rentals')[] | null;
+    /**
+     * Typical response time to inquiries
+     */
+    responseTime?: ('hour' | 'day' | 'week') | null;
+  };
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -1335,6 +1366,158 @@ export interface VerificationRequest {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reviews".
+ */
+export interface Review {
+  id: string;
+  /**
+   * User who wrote the review
+   */
+  reviewer: string | User;
+  /**
+   * Vendor being reviewed
+   */
+  vendor: string | User;
+  /**
+   * Specific property/listing this review is about
+   */
+  property?: (string | null) | Property;
+  /**
+   * The completed transaction that validates this review
+   */
+  transaction: string | Transaction;
+  /**
+   * Overall rating (1-5 stars)
+   */
+  rating: number;
+  /**
+   * Review headline
+   */
+  title: string;
+  /**
+   * Detailed review
+   */
+  comment: string;
+  /**
+   * Detailed aspect ratings
+   */
+  aspects?: {
+    /**
+     * How well did the vendor communicate? (1-5)
+     */
+    communication?: number | null;
+    /**
+     * Was the listing accurate? (1-5)
+     */
+    accuracy?: number | null;
+    /**
+     * Was it good value? (1-5)
+     */
+    value?: number | null;
+  };
+  /**
+   * Vendor's reply to the review
+   */
+  vendorResponse?: string | null;
+  /**
+   * When the vendor responded
+   */
+  vendorResponseDate?: string | null;
+  /**
+   * Review visibility status
+   */
+  status?: ('published' | 'hidden' | 'flagged') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "transactions".
+ */
+export interface Transaction {
+  id: string;
+  /**
+   * Property/listing involved in this transaction
+   */
+  property: string | Property;
+  /**
+   * The buyer in this transaction
+   */
+  buyer: string | User;
+  /**
+   * The seller/vendor (auto-set from property owner)
+   */
+  seller: string | User;
+  /**
+   * Type of transaction
+   */
+  type: 'purchase' | 'rental';
+  /**
+   * Transaction status: pending → confirmed → completed. Both parties must confirm.
+   */
+  status: 'pending' | 'confirmed' | 'completed' | 'disputed' | 'cancelled';
+  /**
+   * Agreed price in XAF
+   */
+  amount?: number | null;
+  /**
+   * Buyer confirms the deal is completed
+   */
+  buyerConfirmed?: boolean | null;
+  /**
+   * Seller confirms the deal is completed
+   */
+  sellerConfirmed?: boolean | null;
+  /**
+   * Auto-set when both parties confirm
+   */
+  completedAt?: string | null;
+  /**
+   * Additional notes about this transaction
+   */
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "chat-sessions".
+ */
+export interface ChatSession {
+  id: string;
+  /**
+   * UUID generated client-side to identify the chat session
+   */
+  sessionId: string;
+  /**
+   * Linked user (if logged in)
+   */
+  userId?: (string | null) | User;
+  messages?:
+    | {
+        role: 'user' | 'assistant';
+        content: string;
+        timestamp: string;
+        id?: string | null;
+      }[]
+    | null;
+  metadata?: {
+    userAgent?: string | null;
+    /**
+     * Page the user was on when they started the chat
+     */
+    pageUrl?: string | null;
+  };
+  status?: ('active' | 'archived') | null;
+  /**
+   * AI-generated summary of the conversation (for admin review)
+   */
+  summary?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1556,6 +1739,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'verification-requests';
         value: string | VerificationRequest;
+      } | null)
+    | ({
+        relationTo: 'reviews';
+        value: string | Review;
+      } | null)
+    | ({
+        relationTo: 'transactions';
+        value: string | Transaction;
+      } | null)
+    | ({
+        relationTo: 'chat-sessions';
+        value: string | ChatSession;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1940,6 +2135,15 @@ export interface UsersSelect<T extends boolean = true> {
   verificationStatus?: T;
   phone?: T;
   address?: T;
+  vendorProfile?:
+    | T
+    | {
+        shopName?: T;
+        bio?: T;
+        avatar?: T;
+        specialties?: T;
+        responseTime?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -2172,6 +2376,75 @@ export interface VerificationRequestsSelect<T extends boolean = true> {
   submittedAt?: T;
   reviewedAt?: T;
   reviewedBy?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reviews_select".
+ */
+export interface ReviewsSelect<T extends boolean = true> {
+  reviewer?: T;
+  vendor?: T;
+  property?: T;
+  transaction?: T;
+  rating?: T;
+  title?: T;
+  comment?: T;
+  aspects?:
+    | T
+    | {
+        communication?: T;
+        accuracy?: T;
+        value?: T;
+      };
+  vendorResponse?: T;
+  vendorResponseDate?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "transactions_select".
+ */
+export interface TransactionsSelect<T extends boolean = true> {
+  property?: T;
+  buyer?: T;
+  seller?: T;
+  type?: T;
+  status?: T;
+  amount?: T;
+  buyerConfirmed?: T;
+  sellerConfirmed?: T;
+  completedAt?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "chat-sessions_select".
+ */
+export interface ChatSessionsSelect<T extends boolean = true> {
+  sessionId?: T;
+  userId?: T;
+  messages?:
+    | T
+    | {
+        role?: T;
+        content?: T;
+        timestamp?: T;
+        id?: T;
+      };
+  metadata?:
+    | T
+    | {
+        userAgent?: T;
+        pageUrl?: T;
+      };
+  status?: T;
+  summary?: T;
   updatedAt?: T;
   createdAt?: T;
 }
